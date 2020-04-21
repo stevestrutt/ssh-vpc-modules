@@ -2,19 +2,23 @@
 # Account Variables
 ##############################################################################
 
+# target region
 variable "ibm_region" {
   description = "IBM Cloud region where all resources will be deployed"
-  default = "us-south"
+  default     = "us-south"
+  # default     = "us-east"
+  # default     = "eu-gb"
 }
 
-variable "az_list" {
-  description = "IBM Cloud availability zones"
-  default     = ["us-south-1", "us-south-2", "us-south-3"]
+variable "ibmcloud_api_key" {
+
 }
+
+
 
 variable "resource_group_name" {
-  description = "ID for IBM Cloud Resource Group"
-  default = "Default"
+  description = "Name of IBM Cloud Resource Group used for all VPC resources"
+  default     = "Default"
 }
 
 variable "generation" {
@@ -22,9 +26,10 @@ variable "generation" {
   default     = 2
 }
 
-variable "unique_id" {
-  description = "The vpc unique id"
-  default     = "ssh1"
+# unique name for the VPC in the account 
+variable "vpc_name" {
+  description = "name of vpc"
+  default     = "ssh-vpc-vpc"
 }
 
 ##############################################################################
@@ -33,51 +38,45 @@ variable "unique_id" {
 # Network variables
 ##############################################################################
 
-variable "az-prefix" {
-  default = ["172.22.192.0/21", "172.22.208.0/21", "172.22.224.0/21"]
+
+variable "bastion_ingress_cidr" {
+  description = "DANGER: cidr range that can ssh to the bastion"
+  default     = ["0.0.0.0/0"]
 }
 
-variable "az1_subnet" {
-  default = ["172.22.192.0/23", "172.22.194.0/23", "172.22.196.0/23", "172.22.198.0/23"]
+
+locals {
+  pub_repo_egress_cidr = "0.0.0.0/0" # cidr range required to contact public software repositories 
 }
 
-variable "az2_subnet" {
-  default = ["172.22.208.0/23", "172.22.210.0/23", "172.22.212.0/23", "172.22.214.0/23"]
+# Predefine subnets for all app tiers for use with `ibm_is_address_prefix`. Single tier CIDR used for NACLs  
+# Each app tier uses: 
+# frontend_cidr_blocks = [cidrsubnet(var.frontend_cidr, 4, 0), cidrsubnet(var.frontend_cidr, 4, 2), cidrsubnet(var.frontend_cidr, 4, 4)]
+# to create individual zone subnets for use with `ibm_is_address_prefix`
+variable "bastion_cidr" {
+  default = "172.22.192.0/20"
 }
 
-variable "az3_subnet" {
-  default = ["172.22.224.0/23", "172.22.226.0/23", "172.22.228.0/23", "172.22.230.0/23"]
+variable "frontend_cidr" {
+  default = "172.16.0.0/20"
 }
 
-variable "subnet-cat" {
-  default = ["tr", "ut", "st", "in"]
+variable "backend_cidr" {
+  default = "172.17.0.0/20"
 }
 
-variable "backend_cidr_blocks" {
-  default = ["172.16.4.0/25", "172.16.2.0/25", "172.16.0.0/25"]
-}
-
-variable "frontend_cidr_blocks" {
-  default = ["172.16.1.0/26", "172.16.3.0/26", "172.16.5.0/26"]
-}
 
 ##############################################################################
-variable "vpc_name" {
-  description = "name of vpc"
-  default     = "ssh-vpc"
-}
 
+# VSI profile
 variable "profile" {
   default = "cx2-2x4"
 }
 
+# image names can be determined with the cli command `ibmcloud is images`
 variable "image_name" {
-  default = "ibm-ubuntu-18-04-64"
+  default = "ibm-centos-7-6-minimal-amd64-1"
 }
-
-# variable "ibm_is_image_id" {
-#   default = "${data.ibm_is_image.os.id}"
-# }
 
 data "ibm_is_image" "os" {
   name = var.image_name
@@ -88,6 +87,6 @@ data "ibm_is_ssh_key" "sshkey" {
 }
 
 variable "ssh_key_name" {
-  default = "ajreddyssh"
+  default = "ansible"
 }
 

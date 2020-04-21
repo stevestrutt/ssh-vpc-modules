@@ -1,27 +1,9 @@
 {
   "version": 4,
   "terraform_version": "0.12.23",
-  "serial": 871,
+  "serial": 752,
   "lineage": "474530b3-cff5-5d96-a625-ddbc5513387c",
   "outputs": {
-    "backend_server_host_ip_addresses": {
-      "value": [
-        [
-          "172.17.0.4"
-        ]
-      ],
-      "type": [
-        "tuple",
-        [
-          [
-            "tuple",
-            [
-              "string"
-            ]
-          ]
-        ]
-      ]
-    },
     "bastion_host_ip_addresses": {
       "value": [
         "52.116.128.158"
@@ -36,19 +18,15 @@
     "frontend_server_host_ip_addresses": {
       "value": [
         [
-          "172.16.0.5",
-          "172.16.2.6"
+          "172.16.0.6"
         ]
       ],
       "type": [
         "tuple",
         [
           [
-            "tuple",
-            [
-              "string",
-              "string"
-            ]
+            "list",
+            "string"
           ]
         ]
       ]
@@ -56,7 +34,6 @@
   },
   "resources": [
     {
-      "module": "module.bastion",
       "mode": "data",
       "type": "ibm_is_image",
       "name": "os",
@@ -77,6 +54,7 @@
       ]
     },
     {
+      "module": "module.bastion",
       "mode": "data",
       "type": "ibm_is_image",
       "name": "os",
@@ -156,16 +134,9 @@
             "status": "available",
             "subnets": [
               {
-                "available_ipv4_address_count": 249,
+                "available_ipv4_address_count": 248,
                 "id": "0717-d60a8ddd-b3ec-4929-809d-8bc9b0ba67db",
                 "name": "ssh-vpc-vpc-frontend-subnet-1",
-                "status": "available",
-                "total_ipv4_address_count": 256
-              },
-              {
-                "available_ipv4_address_count": 248,
-                "id": "0717-d7df8d50-3966-4f50-b818-337f1ee6c69a",
-                "name": "ssh-vpc-vpc-backend-subnet-1",
                 "status": "available",
                 "total_ipv4_address_count": 256
               },
@@ -175,16 +146,25 @@
                 "name": "ssh-vpc-vpc-bast-subnet-1",
                 "status": "available",
                 "total_ipv4_address_count": 256
-              },
-              {
-                "available_ipv4_address_count": 249,
-                "id": "0727-bd0bb67e-2d41-477d-a08d-876268b334fa",
-                "name": "ssh-vpc-vpc-frontend-subnet-2",
-                "status": "available",
-                "total_ipv4_address_count": 256
               }
             ],
             "tags": null
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "ibm_resource_group",
+      "name": "all_rg",
+      "provider": "provider.ibm",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "6a2926964a464380bf28ba3c7850270f",
+            "is_default": null,
+            "name": "Default"
           }
         }
       ]
@@ -202,74 +182,6 @@
             "id": "6a2926964a464380bf28ba3c7850270f",
             "is_default": null,
             "name": "Default"
-          }
-        }
-      ]
-    },
-    {
-      "mode": "data",
-      "type": "ibm_resource_group",
-      "name": "all_rg",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "id": "6a2926964a464380bf28ba3c7850270f",
-            "is_default": null,
-            "name": "Default"
-          }
-        }
-      ]
-    },
-    {
-      "module": "module.backend",
-      "mode": "data",
-      "type": "template_cloudinit_config",
-      "name": "app_userdata",
-      "provider": "provider.template",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "base64_encode": false,
-            "gzip": false,
-            "id": "3676816316",
-            "part": [
-              {
-                "content": "#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n",
-                "content_type": "",
-                "filename": "",
-                "merge_type": ""
-              }
-            ],
-            "rendered": "Content-Type: multipart/mixed; boundary=\"MIMEBOUNDARY\"\nMIME-Version: 1.0\r\n\r\n--MIMEBOUNDARY\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain\r\nMime-Version: 1.0\r\n\r\n#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n\r\n--MIMEBOUNDARY--\r\n"
-          }
-        }
-      ]
-    },
-    {
-      "module": "module.frontend",
-      "mode": "data",
-      "type": "template_cloudinit_config",
-      "name": "app_userdata",
-      "provider": "provider.template",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "base64_encode": false,
-            "gzip": false,
-            "id": "3676816316",
-            "part": [
-              {
-                "content": "#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n",
-                "content_type": "",
-                "filename": "",
-                "merge_type": ""
-              }
-            ],
-            "rendered": "Content-Type: multipart/mixed; boundary=\"MIMEBOUNDARY\"\nMIME-Version: 1.0\r\n\r\n--MIMEBOUNDARY\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain\r\nMime-Version: 1.0\r\n\r\n#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n\r\n--MIMEBOUNDARY--\r\n"
           }
         }
       ]
@@ -306,89 +218,6 @@
             "module.bastion.ibm_is_instance.bastion",
             "module.bastion.ibm_is_security_group.bastion",
             "module.bastion.ibm_is_subnet.bastion_subnet"
-          ]
-        }
-      ]
-    },
-    {
-      "module": "module.backend",
-      "mode": "managed",
-      "type": "ibm_is_instance",
-      "name": "backend-server",
-      "each": "list",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "index_key": 0,
-          "schema_version": 0,
-          "attributes": {
-            "boot_volume": [
-              {
-                "encryption": "",
-                "iops": 3000,
-                "name": "volume-attachment",
-                "profile": "general-purpose",
-                "size": 100
-              }
-            ],
-            "generation": null,
-            "gpu": [],
-            "id": "0717_c31ce87a-f27e-4a3c-b871-4ae291859bb8",
-            "image": "r006-e0039ab2-fcc8-11e9-8a36-6ffb6501dd33",
-            "keys": [
-              "r006-e62f05cb-5fe1-4b5a-968f-db6e63afbb60"
-            ],
-            "memory": 4,
-            "name": "ssh-vpc-vpc-backend-vsi-1",
-            "network_interfaces": [],
-            "primary_network_interface": [
-              {
-                "id": "0717-a4977074-850c-4e6c-85e3-c2a33272c718",
-                "name": "encircle-opposite-seizing-recipient-dividable-stability",
-                "port_speed": 0,
-                "primary_ipv4_address": "172.17.0.4",
-                "security_groups": [
-                  "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5"
-                ],
-                "subnet": "0717-d7df8d50-3966-4f50-b818-337f1ee6c69a"
-              }
-            ],
-            "profile": "cx2-2x4",
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/compute/vs",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::instance:0717_c31ce87a-f27e-4a3c-b871-4ae291859bb8",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "ssh-vpc-vpc-backend-vsi-1",
-            "resource_status": "running",
-            "status": "running",
-            "tags": [],
-            "timeouts": null,
-            "user_data": "Content-Type: multipart/mixed; boundary=\"MIMEBOUNDARY\"\nMIME-Version: 1.0\r\n\r\n--MIMEBOUNDARY\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain\r\nMime-Version: 1.0\r\n\r\n#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n\r\n--MIMEBOUNDARY--\r\n",
-            "vcpu": [
-              {
-                "architecture": "amd64",
-                "count": 2
-              }
-            ],
-            "volume_attachments": [
-              {
-                "id": "0717-3ecd696d-2b35-4da5-a545-212cfb6b9636",
-                "name": "volume-attachment",
-                "volume_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::volume:r006-ffedfd6c-8323-11ea-8004-feff0b330b7b",
-                "volume_id": "r006-ffedfd6c-8323-11ea-8004-feff0b330b7b",
-                "volume_name": "alienable-chop-multitask-backed-stapling-singing"
-              }
-            ],
-            "volumes": [],
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
-            "zone": "us-south-1"
-          },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDB9fQ==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.vpc.ibm_is_public_gateway.repo_gateway",
-            "module.vpc.ibm_is_subnet.backend_subnet",
-            "module.vpc.ibm_is_vpc.vpc"
           ]
         }
       ]
@@ -497,7 +326,7 @@
             ],
             "generation": null,
             "gpu": [],
-            "id": "0717_10fa9aa0-d517-4bc2-b537-b8b4ef5f8c5a",
+            "id": "0717_cda86713-e62f-4c46-9712-e23fa4e6d721",
             "image": "r006-e0039ab2-fcc8-11e9-8a36-6ffb6501dd33",
             "keys": [
               "r006-e62f05cb-5fe1-4b5a-968f-db6e63afbb60"
@@ -507,10 +336,10 @@
             "network_interfaces": [],
             "primary_network_interface": [
               {
-                "id": "0717-c1595689-2b05-4657-aaad-0797669187ac",
-                "name": "shortness-showman-country-reshape-washbasin-accent",
+                "id": "0717-3364f097-8102-4f10-9f09-1a3f700cc2a1",
+                "name": "sixties-gush-enjoyably-amply-cymbal-roving",
                 "port_speed": 0,
-                "primary_ipv4_address": "172.16.0.5",
+                "primary_ipv4_address": "172.16.0.6",
                 "security_groups": [
                   "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145"
                 ],
@@ -519,7 +348,7 @@
             ],
             "profile": "cx2-2x4",
             "resource_controller_url": "https://cloud.ibm.com/vpc-ext/compute/vs",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::instance:0717_10fa9aa0-d517-4bc2-b537-b8b4ef5f8c5a",
+            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::instance:0717_cda86713-e62f-4c46-9712-e23fa4e6d721",
             "resource_group": "6a2926964a464380bf28ba3c7850270f",
             "resource_group_name": "Default",
             "resource_name": "ssh-vpc-vpc-frontend-vsi-1",
@@ -527,7 +356,7 @@
             "status": "running",
             "tags": [],
             "timeouts": null,
-            "user_data": "Content-Type: multipart/mixed; boundary=\"MIMEBOUNDARY\"\nMIME-Version: 1.0\r\n\r\n--MIMEBOUNDARY\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain\r\nMime-Version: 1.0\r\n\r\n#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n\r\n--MIMEBOUNDARY--\r\n",
+            "user_data": null,
             "vcpu": [
               {
                 "architecture": "amd64",
@@ -536,11 +365,11 @@
             ],
             "volume_attachments": [
               {
-                "id": "0717-fbe24991-20b9-4af7-94ec-365f82d12e13",
+                "id": "0717-47a9bcde-6c97-4dda-998f-83dfd3670c6a",
                 "name": "volume-attachment",
-                "volume_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::volume:r006-45f4dee5-82f8-11ea-8004-feff0b330b7b",
-                "volume_id": "r006-45f4dee5-82f8-11ea-8004-feff0b330b7b",
-                "volume_name": "canola-emphases-espionage-spill-daydream-salvation"
+                "volume_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::volume:r006-85eb8ba2-7db9-11ea-b07a-feff0b344b20",
+                "volume_id": "r006-85eb8ba2-7db9-11ea-b07a-feff0b344b20",
+                "volume_name": "food-rephrase-oblong-strength-lusty-crummiest"
               }
             ],
             "volumes": [],
@@ -553,120 +382,6 @@
             "module.vpc.ibm_is_subnet.frontend_subnet",
             "module.vpc.ibm_is_vpc.vpc"
           ]
-        },
-        {
-          "index_key": 1,
-          "schema_version": 0,
-          "attributes": {
-            "boot_volume": [
-              {
-                "encryption": "",
-                "iops": 3000,
-                "name": "volume-attachment",
-                "profile": "general-purpose",
-                "size": 100
-              }
-            ],
-            "generation": null,
-            "gpu": [],
-            "id": "0727_d11f957f-9427-4f2a-a0bb-048d32bd8bd9",
-            "image": "r006-e0039ab2-fcc8-11e9-8a36-6ffb6501dd33",
-            "keys": [
-              "r006-e62f05cb-5fe1-4b5a-968f-db6e63afbb60"
-            ],
-            "memory": 4,
-            "name": "ssh-vpc-vpc-frontend-vsi-2",
-            "network_interfaces": [],
-            "primary_network_interface": [
-              {
-                "id": "0727-1b44082f-9880-4220-9bb6-7cd9e30c8a6b",
-                "name": "washday-deduce-daintily-bagged-sandbar-worst",
-                "port_speed": 0,
-                "primary_ipv4_address": "172.16.2.6",
-                "security_groups": [
-                  "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145"
-                ],
-                "subnet": "0727-bd0bb67e-2d41-477d-a08d-876268b334fa"
-              }
-            ],
-            "profile": "cx2-2x4",
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/compute/vs",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-2:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::instance:0727_d11f957f-9427-4f2a-a0bb-048d32bd8bd9",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "ssh-vpc-vpc-frontend-vsi-2",
-            "resource_status": "running",
-            "status": "running",
-            "tags": [],
-            "timeouts": null,
-            "user_data": "Content-Type: multipart/mixed; boundary=\"MIMEBOUNDARY\"\nMIME-Version: 1.0\r\n\r\n--MIMEBOUNDARY\r\nContent-Transfer-Encoding: 7bit\r\nContent-Type: text/plain\r\nMime-Version: 1.0\r\n\r\n#cloud-config\nmanage_etc_hosts: true\npackage_upgrade: false\npackages:\n- httpd\nruncmd:\n- 'cp /usr/share/httpd/noindex/index.html /var/www/html' \n- 'systemctl start httpd'\nfinal_message: \"The system is finally up, after $UPTIME seconds\"\n\r\n--MIMEBOUNDARY--\r\n",
-            "vcpu": [
-              {
-                "architecture": "amd64",
-                "count": 2
-              }
-            ],
-            "volume_attachments": [
-              {
-                "id": "0727-f70aef14-b620-4d51-8756-168058dae406",
-                "name": "volume-attachment",
-                "volume_crn": "crn:v1:bluemix:public:is:us-south-2:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::volume:r006-45fda6a0-82f8-11ea-9b4e-feff0b0a4b46",
-                "volume_id": "r006-45fda6a0-82f8-11ea-9b4e-feff0b0a4b46",
-                "volume_name": "stunner-certainty-imperfect-swinger-rejoicing-jawed"
-              }
-            ],
-            "volumes": [],
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
-            "zone": "us-south-2"
-          },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDB9fQ==",
-          "dependencies": [
-            "module.frontend.ibm_is_security_group.frontend",
-            "module.vpc.ibm_is_subnet.frontend_subnet",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        }
-      ]
-    },
-    {
-      "module": "module.frontend",
-      "mode": "managed",
-      "type": "ibm_is_lb",
-      "name": "webapptier-lb",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "hostname": "ad025805-us-south.lb.appdomain.cloud",
-            "id": "r006-ad025805-5294-4a3c-9a08-52623534b808",
-            "name": "webapptier",
-            "operating_status": "online",
-            "private_ips": [
-              "172.16.0.4",
-              "172.16.2.5"
-            ],
-            "public_ips": [
-              "52.116.128.129",
-              "52.116.204.93"
-            ],
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/loadBalancers",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "webapptier",
-            "status": "active",
-            "subnets": [
-              "0717-d60a8ddd-b3ec-4929-809d-8bc9b0ba67db",
-              "0727-bd0bb67e-2d41-477d-a08d-876268b334fa"
-            ],
-            "tags": [],
-            "timeouts": null,
-            "type": "public"
-          },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDB9fQ==",
-          "dependencies": [
-            "module.vpc.ibm_is_subnet.frontend_subnet"
-          ]
         }
       ]
     },
@@ -674,7 +389,7 @@
       "module": "module.frontend",
       "mode": "managed",
       "type": "ibm_is_lb_listener",
-      "name": "webapptier-lb-listener",
+      "name": "webapptier_lb_listener",
       "provider": "provider.ibm",
       "instances": [
         {
@@ -682,10 +397,10 @@
           "attributes": {
             "certificate_instance": null,
             "connection_limit": 0,
-            "default_pool": "r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d",
-            "id": "r006-ad025805-5294-4a3c-9a08-52623534b808/r006-3bc71d4a-ac61-4321-af4e-5ffac68f7ac3",
-            "lb": "r006-ad025805-5294-4a3c-9a08-52623534b808",
-            "listener_id": "r006-3bc71d4a-ac61-4321-af4e-5ffac68f7ac3",
+            "default_pool": null,
+            "id": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2/r006-3eaab99e-d641-451e-a1cd-9d1f424ea37c",
+            "lb": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2",
+            "listener_id": "r006-3eaab99e-d641-451e-a1cd-9d1f424ea37c",
             "port": 80,
             "protocol": "http",
             "status": "active",
@@ -693,8 +408,7 @@
           },
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInVwZGF0ZSI6MzYwMDAwMDAwMDAwMH19",
           "dependencies": [
-            "module.frontend.ibm_is_lb.webapptier-lb",
-            "module.frontend.ibm_is_lb_pool.webapptier-lb-pool"
+            "module.frontend.ibm_is_lb.webapptier-lb"
           ]
         }
       ]
@@ -711,13 +425,13 @@
           "attributes": {
             "algorithm": "round_robin",
             "health_delay": 5,
-            "health_monitor_port": 80,
+            "health_monitor_port": 0,
             "health_monitor_url": "/",
             "health_retries": 2,
             "health_timeout": 2,
             "health_type": "http",
-            "id": "r006-ad025805-5294-4a3c-9a08-52623534b808/r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d",
-            "lb": "r006-ad025805-5294-4a3c-9a08-52623534b808",
+            "id": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2/r006-d53faa1e-0dc3-4b8e-9c7a-0de4b7fe2dfb",
+            "lb": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2",
             "name": "webapptier-lb-pool",
             "protocol": "http",
             "provisioning_status": "active",
@@ -728,8 +442,7 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInVwZGF0ZSI6MzYwMDAwMDAwMDAwMH19",
           "dependencies": [
             "module.frontend.ibm_is_lb.webapptier-lb",
-            "module.frontend.ibm_is_lb_listener.webapptier_lb_listener",
-            "module.vpc.ibm_is_subnet.frontend_subnet"
+            "module.frontend.ibm_is_lb_listener.webapptier_lb_listener"
           ]
         }
       ]
@@ -746,37 +459,14 @@
           "index_key": 0,
           "schema_version": 0,
           "attributes": {
-            "health": "ok",
-            "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/r006-ad025805-5294-4a3c-9a08-52623534b808/pools/r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d/members/r006-0536bcb8-39a5-448e-b2b8-65d21544a681",
-            "id": "r006-ad025805-5294-4a3c-9a08-52623534b808/r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d/r006-0536bcb8-39a5-448e-b2b8-65d21544a681",
-            "lb": "r006-ad025805-5294-4a3c-9a08-52623534b808",
-            "pool": "r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d",
+            "health": "unknown",
+            "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/r006-2c0c0028-6f13-4a3b-abab-9173412781d2/pools/r006-d53faa1e-0dc3-4b8e-9c7a-0de4b7fe2dfb/members/r006-5e7c3670-abe4-4882-bba4-b2b15051222f",
+            "id": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2/r006-d53faa1e-0dc3-4b8e-9c7a-0de4b7fe2dfb/r006-5e7c3670-abe4-4882-bba4-b2b15051222f",
+            "lb": "r006-2c0c0028-6f13-4a3b-abab-9173412781d2",
+            "pool": "r006-d53faa1e-0dc3-4b8e-9c7a-0de4b7fe2dfb",
             "port": 8080,
             "provisioning_status": "active",
-            "target_address": "172.16.0.5",
-            "timeouts": null,
-            "weight": 50
-          },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
-          "dependencies": [
-            "module.frontend.ibm_is_instance.frontend-server",
-            "module.frontend.ibm_is_lb.webapptier-lb",
-            "module.frontend.ibm_is_lb_listener.webapptier_lb_listener",
-            "module.frontend.ibm_is_lb_pool.webapptier-lb-pool"
-          ]
-        },
-        {
-          "index_key": 1,
-          "schema_version": 0,
-          "attributes": {
-            "health": "ok",
-            "href": "https://us-south.iaas.cloud.ibm.com/v1/load_balancers/r006-ad025805-5294-4a3c-9a08-52623534b808/pools/r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d/members/r006-636d6405-1438-45fd-be20-4a6a179ef9e2",
-            "id": "r006-ad025805-5294-4a3c-9a08-52623534b808/r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d/r006-636d6405-1438-45fd-be20-4a6a179ef9e2",
-            "lb": "r006-ad025805-5294-4a3c-9a08-52623534b808",
-            "pool": "r006-0a52aeda-3d6a-4f8e-82fc-529904ce9d1d",
-            "port": 8080,
-            "provisioning_status": "active",
-            "target_address": "172.16.2.6",
+            "target_address": "172.16.0.6",
             "timeouts": null,
             "weight": 50
           },
@@ -813,7 +503,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "c8e40ea0-f430-4d65-b203-8912e762cf6a",
+                "id": "a6f24c7e-c610-45cb-a430-c25743168368",
                 "ip_version": "ipv4",
                 "name": "inbound-tcp-cqrtkbej",
                 "source": "172.16.0.0/20",
@@ -833,7 +523,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "95841e9b-ac30-4cdd-8b7a-f15c6b8f922c",
+                "id": "dcd75a73-21a6-4b54-b0f3-c7de9b798768",
                 "ip_version": "ipv4",
                 "name": "inbound-tcp-hmcjikda",
                 "source": "172.17.0.0/20",
@@ -853,7 +543,7 @@
                 "destination": "172.16.0.0/20",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "d9456121-3b0a-44ea-8d6b-8c6b2703ffb6",
+                "id": "272f0f7b-e155-4c93-9301-6ee1fdc2cd14",
                 "ip_version": "ipv4",
                 "name": "outbound-tcp-qjmdeatg",
                 "source": "0.0.0.0/0",
@@ -873,7 +563,7 @@
                 "destination": "172.17.0.0/20",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "66a0e246-b20e-45ac-a892-c0ec60417389",
+                "id": "70c64d59-1d1a-4af5-938a-67740fe8eb92",
                 "ip_version": "ipv4",
                 "name": "outbound-tcp-hjhsnpzq",
                 "source": "0.0.0.0/0",
@@ -893,7 +583,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "6f49e27e-4e14-4f38-bc3c-738e8ac8f565",
+                "id": "7d494cd3-4f19-48ca-9ea1-a5cb2e54ef8e",
                 "ip_version": "ipv4",
                 "name": "inbound-tcp-xlltxpum",
                 "source": "0.0.0.0/0",
@@ -913,7 +603,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "e6b91bd3-60a8-4cc3-befd-b07e0c2e8b6c",
+                "id": "b2874b63-d1b6-45af-8fa3-e770e2d1c62c",
                 "ip_version": "ipv4",
                 "name": "outbound-tcp-pmndqzob",
                 "source": "0.0.0.0/0",
@@ -933,7 +623,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "734939fc-4a53-4309-ba12-503b77edeede",
+                "id": "6e68a282-6d02-48c5-9575-ae6a28cc4b98",
                 "ip_version": "ipv4",
                 "name": "inbound-tcp-tpxncabj",
                 "source": "161.26.0.0/16",
@@ -953,7 +643,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "52088acf-d289-44ad-8825-6e40fee7cf4f",
+                "id": "386c7a42-3ce4-4781-b4ad-455d089a1108",
                 "ip_version": "ipv4",
                 "name": "inbound-udp-flerllma",
                 "source": "161.26.0.0/16",
@@ -973,7 +663,7 @@
                 "destination": "161.26.0.0/16",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "42ca3c84-78b8-4627-8212-89a1accfa760",
+                "id": "c3abcfa1-8050-44f1-853d-3aef953d934c",
                 "ip_version": "ipv4",
                 "name": "outbound-tcp-nyakdnlf",
                 "source": "0.0.0.0/0",
@@ -993,7 +683,7 @@
                 "destination": "161.26.0.0/16",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "b94a7730-d6eb-452e-bb35-11458d17699c",
+                "id": "44b4465e-8aba-43b0-a039-0d345f8ec2c3",
                 "ip_version": "ipv4",
                 "name": "outbound-udp-hgskjxhp",
                 "source": "0.0.0.0/0",
@@ -1013,7 +703,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "inbound",
                 "icmp": [],
-                "id": "05a7a725-24b0-493b-8b35-f884bca93be9",
+                "id": "43285e3a-367a-4e9c-b540-a23d2cf4debc",
                 "ip_version": "ipv4",
                 "name": "inbound-all-tigxhcuw",
                 "source": "0.0.0.0/0",
@@ -1026,7 +716,7 @@
                 "destination": "0.0.0.0/0",
                 "direction": "outbound",
                 "icmp": [],
-                "id": "1e5ba468-95b9-4ab6-b60e-68741a87b5dd",
+                "id": "44f5bbe1-b7f5-4218-9452-342b61e49920",
                 "ip_version": "ipv4",
                 "name": "outbound-all-ixnmnfoq",
                 "source": "0.0.0.0/0",
@@ -1039,7 +729,8 @@
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.bastion.random_string.uuid"
+            "module.bastion.random_string.uuid",
+            "module.vpc.ibm_is_vpc.vpc"
           ]
         }
       ]
@@ -1058,12 +749,12 @@
           "attributes": {
             "floating_ip": {
               "address": "52.116.140.1",
-              "id": "r006-7db3016c-14d7-45eb-b0df-beef32a74227"
+              "id": "r006-5da581fc-e361-43d7-a026-5b3355e9ddcf"
             },
-            "id": "r006-0b48af66-5872-4b8b-8430-b494d0b1d599",
+            "id": "r006-c3359f58-a5a5-44c6-a0aa-3cf2408835c4",
             "name": "ssh-vpc-vpc-public-gtw-0",
             "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/publicGateways",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::public-gateway:r006-0b48af66-5872-4b8b-8430-b494d0b1d599",
+            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::public-gateway:r006-c3359f58-a5a5-44c6-a0aa-3cf2408835c4",
             "resource_group": "6a2926964a464380bf28ba3c7850270f",
             "resource_group_name": "Default",
             "resource_name": "ssh-vpc-vpc-public-gtw-0",
@@ -1087,13 +778,13 @@
           "schema_version": 0,
           "attributes": {
             "floating_ip": {
-              "address": "52.116.196.68",
-              "id": "r006-8d285125-ba7b-441d-888f-e99873719b0f"
+              "address": "169.47.92.151",
+              "id": "r006-de6fe885-08dc-4b48-a8cc-983282d74711"
             },
-            "id": "r006-87bb6f79-dfb0-4aec-aca5-95a192e6356a",
+            "id": "r006-e89345fa-0476-4e26-a812-6750423fd6e3",
             "name": "ssh-vpc-vpc-public-gtw-1",
             "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/publicGateways",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-2:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::public-gateway:r006-87bb6f79-dfb0-4aec-aca5-95a192e6356a",
+            "resource_crn": "crn:v1:bluemix:public:is:us-south-2:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::public-gateway:r006-e89345fa-0476-4e26-a812-6750423fd6e3",
             "resource_group": "6a2926964a464380bf28ba3c7850270f",
             "resource_group_name": "Default",
             "resource_name": "ssh-vpc-vpc-public-gtw-1",
@@ -1108,94 +799,6 @@
             "zone": "us-south-2"
           },
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo1NDAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDB9fQ==",
-          "dependencies": [
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        }
-      ]
-    },
-    {
-      "module": "module.backend",
-      "mode": "managed",
-      "type": "ibm_is_security_group",
-      "name": "backend",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "schema_version": 0,
-          "attributes": {
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "name": "ssh-vpc-vpc-backend-sg",
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/securityGroups",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::security-group:r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "ssh-vpc-vpc-backend-sg",
-            "rules": [
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "inbound",
-                "ip_version": "ipv4",
-                "port_max": 22,
-                "port_min": 22,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 443,
-                "port_min": 443,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 53,
-                "port_min": 53,
-                "protocol": "udp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "inbound",
-                "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              }
-            ],
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978"
-          },
-          "private": "bnVsbA==",
           "dependencies": [
             "module.vpc.ibm_is_vpc.vpc"
           ]
@@ -1234,8 +837,8 @@
                 "code": 0,
                 "direction": "outbound",
                 "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
+                "port_max": 443,
+                "port_min": 443,
                 "protocol": "tcp",
                 "remote": "",
                 "type": 0
@@ -1252,40 +855,10 @@
               },
               {
                 "code": 0,
-                "direction": "inbound",
-                "ip_version": "ipv4",
-                "port_max": 0,
-                "port_min": 0,
-                "protocol": "icmp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 0,
-                "port_min": 0,
-                "protocol": "icmp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
                 "direction": "outbound",
                 "ip_version": "ipv4",
                 "port_max": 80,
                 "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 443,
-                "port_min": 443,
                 "protocol": "tcp",
                 "remote": "",
                 "type": 0
@@ -1297,16 +870,6 @@
                 "port_max": 53,
                 "port_min": 53,
                 "protocol": "udp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 22,
-                "port_min": 22,
-                "protocol": "tcp",
                 "remote": "",
                 "type": 0
               }
@@ -1337,17 +900,7 @@
             "rules": [
               {
                 "code": 0,
-                "direction": "inbound",
-                "ip_version": "ipv4",
-                "port_max": 65535,
-                "port_min": 1,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "inbound",
+                "direction": "outbound",
                 "ip_version": "ipv4",
                 "port_max": 80,
                 "port_min": 80,
@@ -1359,29 +912,9 @@
                 "code": 0,
                 "direction": "outbound",
                 "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "inbound",
-                "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
-                "remote": "",
-                "type": 0
-              },
-              {
-                "code": 0,
-                "direction": "outbound",
-                "ip_version": "ipv4",
-                "port_max": 80,
-                "port_min": 80,
-                "protocol": "tcp",
+                "port_max": 53,
+                "port_min": 53,
+                "protocol": "udp",
                 "remote": "",
                 "type": 0
               },
@@ -1409,9 +942,9 @@
                 "code": 0,
                 "direction": "outbound",
                 "ip_version": "ipv4",
-                "port_max": 53,
-                "port_min": 53,
-                "protocol": "udp",
+                "port_max": 80,
+                "port_min": 80,
+                "protocol": "tcp",
                 "remote": "",
                 "type": 0
               }
@@ -1420,172 +953,6 @@
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        }
-      ]
-    },
-    {
-      "module": "module.backend",
-      "mode": "managed",
-      "type": "ibm_is_security_group_rule",
-      "name": "backend_access",
-      "each": "list",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "index_key": 0,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "inbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-c3d21fde-4cc4-4447-8e95-d56b283c3fea",
-            "ip_version": "ipv4",
-            "remote": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d",
-            "rule_id": "r006-c3d21fde-4cc4-4447-8e95-d56b283c3fea",
-            "tcp": [
-              {
-                "port_max": 22,
-                "port_min": 22
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 1,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-8b1ccb59-4e0b-40c7-aff5-e56b0cefa848",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/24",
-            "rule_id": "r006-8b1ccb59-4e0b-40c7-aff5-e56b0cefa848",
-            "tcp": [
-              {
-                "port_max": 443,
-                "port_min": 443
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 2,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-6f2a08ce-fe34-4d97-97bc-e791cf3da9ce",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/24",
-            "rule_id": "r006-6f2a08ce-fe34-4d97-97bc-e791cf3da9ce",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 3,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-ca14f9ac-23bb-421b-977d-20656b0a43d7",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/24",
-            "rule_id": "r006-ca14f9ac-23bb-421b-977d-20656b0a43d7",
-            "tcp": [],
-            "udp": [
-              {
-                "port_max": 53,
-                "port_min": 53
-              }
-            ]
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 4,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-9e2c2e1a-6481-4aba-929f-dc3d8170a72d",
-            "ip_version": "ipv4",
-            "remote": "0.0.0.0/0",
-            "rule_id": "r006-9e2c2e1a-6481-4aba-929f-dc3d8170a72d",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 5,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "inbound",
-            "group": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "icmp": [],
-            "id": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5.r006-84cd5ad9-f3af-49a0-9e7f-c7b19d5cbe26",
-            "ip_version": "ipv4",
-            "remote": "0.0.0.0/0",
-            "rule_id": "r006-84cd5ad9-f3af-49a0-9e7f-c7b19d5cbe26",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
             "module.vpc.ibm_is_vpc.vpc"
           ]
         }
@@ -1657,21 +1024,20 @@
             "direction": "outbound",
             "group": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d",
             "icmp": [],
-            "id": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d.r006-a3fb062d-aa9e-4c3d-8fd1-4f10e8258509",
+            "id": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d.r006-3a5a0529-b449-4533-ac63-b3c8e739eb36",
             "ip_version": "ipv4",
-            "remote": "r006-c2a6a62f-2ec1-49ac-9ed0-8e928b65efe5",
-            "rule_id": "r006-a3fb062d-aa9e-4c3d-8fd1-4f10e8258509",
-            "tcp": [
+            "remote": "161.26.0.0/16",
+            "rule_id": "r006-3a5a0529-b449-4533-ac63-b3c8e739eb36",
+            "tcp": [],
+            "udp": [
               {
-                "port_max": 22,
-                "port_min": 22
+                "port_max": 53,
+                "port_min": 53
               }
-            ],
-            "udp": []
+            ]
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
             "module.bastion.ibm_is_security_group.bastion",
             "module.frontend.ibm_is_security_group.frontend"
           ]
@@ -1683,21 +1049,20 @@
             "direction": "outbound",
             "group": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d",
             "icmp": [],
-            "id": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d.r006-e081c61b-93b9-410f-9c75-2810c224be8d",
+            "id": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d.r006-d409d4e3-f44b-4632-94e7-c1371ce8f1a5",
             "ip_version": "ipv4",
             "remote": "161.26.0.0/16",
-            "rule_id": "r006-e081c61b-93b9-410f-9c75-2810c224be8d",
-            "tcp": [],
-            "udp": [
+            "rule_id": "r006-d409d4e3-f44b-4632-94e7-c1371ce8f1a5",
+            "tcp": [
               {
-                "port_max": 53,
-                "port_min": 53
+                "port_max": 80,
+                "port_min": 80
               }
-            ]
+            ],
+            "udp": []
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
             "module.bastion.ibm_is_security_group.bastion",
             "module.frontend.ibm_is_security_group.frontend"
           ]
@@ -1715,32 +1080,6 @@
             "rule_id": "r006-f0267839-55de-4e7e-8467-9db64e795a19",
             "tcp": [
               {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
-          ]
-        },
-        {
-          "index_key": 5,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d",
-            "icmp": [],
-            "id": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d.r006-2b4b283e-280e-43ad-aa65-d470a44421d3",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/16",
-            "rule_id": "r006-2b4b283e-280e-43ad-aa65-d470a44421d3",
-            "tcp": [
-              {
                 "port_max": 443,
                 "port_min": 443
               }
@@ -1749,7 +1088,6 @@
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.backend.ibm_is_security_group.backend",
             "module.bastion.ibm_is_security_group.bastion",
             "module.frontend.ibm_is_security_group.frontend"
           ]
@@ -1760,21 +1098,52 @@
       "module": "module.frontend",
       "mode": "managed",
       "type": "ibm_is_security_group_rule",
-      "name": "frontend_access",
-      "each": "list",
+      "name": "dns",
       "provider": "provider.ibm",
       "instances": [
         {
-          "index_key": 0,
+          "schema_version": 0,
+          "attributes": {
+            "direction": "outbound",
+            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
+            "icmp": [],
+            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-75895f87-dfcd-4f24-b853-721f34894dd8",
+            "ip_version": "ipv4",
+            "remote": "161.26.0.0/8",
+            "rule_id": "r006-75895f87-dfcd-4f24-b853-721f34894dd8",
+            "tcp": [],
+            "udp": [
+              {
+                "port_max": 53,
+                "port_min": 53
+              }
+            ]
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "module.frontend.ibm_is_security_group.frontend",
+            "module.vpc.ibm_is_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.frontend",
+      "mode": "managed",
+      "type": "ibm_is_security_group_rule",
+      "name": "frontend_ingress_ssh_bastion",
+      "provider": "provider.ibm",
+      "instances": [
+        {
           "schema_version": 0,
           "attributes": {
             "direction": "inbound",
             "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
             "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-c6317deb-e96c-4423-84c2-ee61fff16b09",
+            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-76f666cf-7165-43e6-a35e-9a84132e12a9",
             "ip_version": "ipv4",
             "remote": "r006-b5b06cea-9fea-451c-a81e-c002ea73280d",
-            "rule_id": "r006-c6317deb-e96c-4423-84c2-ee61fff16b09",
+            "rule_id": "r006-76f666cf-7165-43e6-a35e-9a84132e12a9",
             "tcp": [
               {
                 "port_max": 22,
@@ -1786,20 +1155,62 @@
           "private": "bnVsbA==",
           "dependencies": [
             "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
+            "module.frontend.ibm_is_security_group.frontend",
+            "module.vpc.ibm_is_vpc.vpc"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "module": "module.frontend",
+      "mode": "managed",
+      "type": "ibm_is_security_group_rule",
+      "name": "int_repo_http",
+      "provider": "provider.ibm",
+      "instances": [
         {
-          "index_key": 1,
           "schema_version": 0,
           "attributes": {
             "direction": "outbound",
             "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
             "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-56ec80b3-52f2-45ee-8815-6dd1c46e0d27",
+            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-e5f9d51a-a0d6-4a03-a97f-b993efd7b564",
             "ip_version": "ipv4",
             "remote": "161.26.0.0/24",
-            "rule_id": "r006-56ec80b3-52f2-45ee-8815-6dd1c46e0d27",
+            "rule_id": "r006-e5f9d51a-a0d6-4a03-a97f-b993efd7b564",
+            "tcp": [
+              {
+                "port_max": 80,
+                "port_min": 80
+              }
+            ],
+            "udp": []
+          },
+          "private": "bnVsbA==",
+          "dependencies": [
+            "module.frontend.ibm_is_security_group.frontend",
+            "module.vpc.ibm_is_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "module": "module.frontend",
+      "mode": "managed",
+      "type": "ibm_is_security_group_rule",
+      "name": "int_repo_https",
+      "provider": "provider.ibm",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "direction": "outbound",
+            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
+            "icmp": [],
+            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-350978f5-7792-484c-ac79-b53b17ceebae",
+            "ip_version": "ipv4",
+            "remote": "161.26.0.0/24",
+            "rule_id": "r006-350978f5-7792-484c-ac79-b53b17ceebae",
             "tcp": [
               {
                 "port_max": 443,
@@ -1810,147 +1221,40 @@
           },
           "private": "bnVsbA==",
           "dependencies": [
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
-          ]
-        },
-        {
-          "index_key": 2,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
-            "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-c6a9278f-1806-47f4-a053-01b9b8292da1",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/24",
-            "rule_id": "r006-c6a9278f-1806-47f4-a053-01b9b8292da1",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
-          ]
-        },
-        {
-          "index_key": 3,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
-            "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-df8c4d1f-bac8-48ce-a141-07d24de686e6",
-            "ip_version": "ipv4",
-            "remote": "161.26.0.0/24",
-            "rule_id": "r006-df8c4d1f-bac8-48ce-a141-07d24de686e6",
-            "tcp": [],
-            "udp": [
-              {
-                "port_max": 53,
-                "port_min": 53
-              }
-            ]
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
-          ]
-        },
-        {
-          "index_key": 4,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "outbound",
-            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
-            "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-8ed48a92-18d6-4c1e-9a27-069cb557d8bb",
-            "ip_version": "ipv4",
-            "remote": "0.0.0.0/0",
-            "rule_id": "r006-8ed48a92-18d6-4c1e-9a27-069cb557d8bb",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
-          ]
-        },
-        {
-          "index_key": 5,
-          "schema_version": 0,
-          "attributes": {
-            "direction": "inbound",
-            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
-            "icmp": [],
-            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-480c03d9-e241-4cc6-a9e9-d22c25875afc",
-            "ip_version": "ipv4",
-            "remote": "0.0.0.0/0",
-            "rule_id": "r006-480c03d9-e241-4cc6-a9e9-d22c25875afc",
-            "tcp": [
-              {
-                "port_max": 80,
-                "port_min": 80
-              }
-            ],
-            "udp": []
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.bastion.ibm_is_security_group.bastion",
-            "module.frontend.ibm_is_security_group.frontend"
+            "module.frontend.ibm_is_security_group.frontend",
+            "module.vpc.ibm_is_vpc.vpc"
           ]
         }
       ]
     },
     {
-      "module": "module.vpc",
+      "module": "module.frontend",
       "mode": "managed",
-      "type": "ibm_is_subnet",
-      "name": "backend_subnet",
-      "each": "list",
+      "type": "ibm_is_security_group_rule",
+      "name": "pub_repo_egress_http",
       "provider": "provider.ibm",
       "instances": [
         {
-          "index_key": 0,
           "schema_version": 0,
           "attributes": {
-            "available_ipv4_address_count": null,
-            "id": "0717-d7df8d50-3966-4f50-b818-337f1ee6c69a",
+            "direction": "outbound",
+            "group": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145",
+            "icmp": [],
+            "id": "r006-dc1f86c4-05f5-45fc-a4d1-2ecafc660145.r006-af70cf34-d0cf-4bc8-91e9-4dc04014ff1a",
             "ip_version": "ipv4",
-            "ipv4_cidr_block": "172.17.0.0/24",
-            "ipv6_cidr_block": "",
-            "name": "ssh-vpc-vpc-backend-subnet-1",
-            "network_acl": "r006-eb974d8a-aca0-47fd-b8f4-ea1a85e2a3ac",
-            "public_gateway": "r006-0b48af66-5872-4b8b-8430-b494d0b1d599",
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/subnets",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::subnet:0717-d7df8d50-3966-4f50-b818-337f1ee6c69a",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "ssh-vpc-vpc-backend-subnet-1",
-            "resource_status": "available",
-            "status": "available",
-            "timeouts": null,
-            "total_ipv4_address_count": 256,
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
-            "zone": "us-south-1"
+            "remote": "0.0.0.0/0",
+            "rule_id": "r006-af70cf34-d0cf-4bc8-91e9-4dc04014ff1a",
+            "tcp": [
+              {
+                "port_max": 80,
+                "port_min": 80
+              }
+            ],
+            "udp": []
           },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
+          "private": "bnVsbA==",
           "dependencies": [
-            "module.vpc.ibm_is_public_gateway.repo_gateway",
+            "module.frontend.ibm_is_security_group.frontend",
             "module.vpc.ibm_is_vpc.vpc"
           ]
         }
@@ -1991,8 +1295,7 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
           "dependencies": [
             "module.bastion.ibm_is_network_acl.bastion_acl",
-            "module.bastion.ibm_is_vpc_address_prefix.bast_subnet_prefix",
-            "module.bastion.random_string.uuid"
+            "module.bastion.ibm_is_vpc_address_prefix.bast_subnet_prefix"
           ]
         }
       ]
@@ -2016,7 +1319,7 @@
             "ipv6_cidr_block": "",
             "name": "ssh-vpc-vpc-frontend-subnet-1",
             "network_acl": "r006-eb974d8a-aca0-47fd-b8f4-ea1a85e2a3ac",
-            "public_gateway": "r006-0b48af66-5872-4b8b-8430-b494d0b1d599",
+            "public_gateway": "r006-c3359f58-a5a5-44c6-a0aa-3cf2408835c4",
             "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/subnets",
             "resource_crn": "crn:v1:bluemix:public:is:us-south-1:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::subnet:0717-d60a8ddd-b3ec-4929-809d-8bc9b0ba67db",
             "resource_group": "6a2926964a464380bf28ba3c7850270f",
@@ -2032,37 +1335,8 @@
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
           "dependencies": [
             "module.vpc.ibm_is_public_gateway.repo_gateway",
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
-        },
-        {
-          "index_key": 1,
-          "schema_version": 0,
-          "attributes": {
-            "available_ipv4_address_count": null,
-            "id": "0727-bd0bb67e-2d41-477d-a08d-876268b334fa",
-            "ip_version": "ipv4",
-            "ipv4_cidr_block": "172.16.2.0/24",
-            "ipv6_cidr_block": "",
-            "name": "ssh-vpc-vpc-frontend-subnet-2",
-            "network_acl": "r006-eb974d8a-aca0-47fd-b8f4-ea1a85e2a3ac",
-            "public_gateway": "r006-87bb6f79-dfb0-4aec-aca5-95a192e6356a",
-            "resource_controller_url": "https://cloud.ibm.com/vpc-ext/network/subnets",
-            "resource_crn": "crn:v1:bluemix:public:is:us-south-2:a/a4a3f711f0e54a0dbe72dd51e7ea2f90::subnet:0727-bd0bb67e-2d41-477d-a08d-876268b334fa",
-            "resource_group": "6a2926964a464380bf28ba3c7850270f",
-            "resource_group_name": "Default",
-            "resource_name": "ssh-vpc-vpc-frontend-subnet-2",
-            "resource_status": "available",
-            "status": "available",
-            "timeouts": null,
-            "total_ipv4_address_count": 256,
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
-            "zone": "us-south-2"
-          },
-          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwLCJ1cGRhdGUiOjYwMDAwMDAwMDAwMH19",
-          "dependencies": [
-            "module.vpc.ibm_is_public_gateway.repo_gateway",
-            "module.vpc.ibm_is_vpc.vpc"
+            "module.vpc.ibm_is_vpc.vpc",
+            "module.vpc.ibm_is_vpc_address_prefix.frontend_subnet_prefix"
           ]
         }
       ]
@@ -2108,16 +1382,9 @@
             "status": "available",
             "subnets": [
               {
-                "available_ipv4_address_count": 249,
+                "available_ipv4_address_count": 248,
                 "id": "0717-d60a8ddd-b3ec-4929-809d-8bc9b0ba67db",
                 "name": "ssh-vpc-vpc-frontend-subnet-1",
-                "status": "available",
-                "total_ipv4_address_count": 256
-              },
-              {
-                "available_ipv4_address_count": 248,
-                "id": "0717-d7df8d50-3966-4f50-b818-337f1ee6c69a",
-                "name": "ssh-vpc-vpc-backend-subnet-1",
                 "status": "available",
                 "total_ipv4_address_count": 256
               },
@@ -2127,45 +1394,12 @@
                 "name": "ssh-vpc-vpc-bast-subnet-1",
                 "status": "available",
                 "total_ipv4_address_count": 256
-              },
-              {
-                "available_ipv4_address_count": 249,
-                "id": "0727-bd0bb67e-2d41-477d-a08d-876268b334fa",
-                "name": "ssh-vpc-vpc-frontend-subnet-2",
-                "status": "available",
-                "total_ipv4_address_count": 256
               }
             ],
             "tags": [],
             "timeouts": null
           },
           "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDB9fQ=="
-        }
-      ]
-    },
-    {
-      "module": "module.vpc",
-      "mode": "managed",
-      "type": "ibm_is_vpc_address_prefix",
-      "name": "backend_subnet_prefix",
-      "each": "list",
-      "provider": "provider.ibm",
-      "instances": [
-        {
-          "index_key": 0,
-          "schema_version": 0,
-          "attributes": {
-            "cidr": "172.17.0.0/24",
-            "has_subnets": true,
-            "id": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978/r006-015bfe53-453f-4474-ac8f-dba1696fd4d7",
-            "name": "ssh-vpc-vpc-backend-prefix-zone-1",
-            "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
-            "zone": "us-south-1"
-          },
-          "private": "bnVsbA==",
-          "dependencies": [
-            "module.vpc.ibm_is_vpc.vpc"
-          ]
         }
       ]
     },
@@ -2221,8 +1455,8 @@
           "schema_version": 0,
           "attributes": {
             "cidr": "172.16.2.0/24",
-            "has_subnets": true,
-            "id": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978/r006-9655d2db-a882-4b17-adba-522dc8b72cd8",
+            "has_subnets": false,
+            "id": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978/r006-ce836fca-88dd-48e7-aede-d7bf7370a9de",
             "name": "ssh-vpc-vpc-frontend-prefix-zone-2",
             "vpc": "r006-60bf97b4-8a49-4b93-b5a7-1ecb1269e978",
             "zone": "us-south-2"

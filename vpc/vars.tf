@@ -1,5 +1,5 @@
 ##############################################################################
-# Account Variables
+# VPC Variables
 ##############################################################################
 
 variable "ibm_region" {
@@ -10,44 +10,43 @@ variable "resource_group_name" {
   description = "ID for IBM Cloud Resource Group"
 }
 
-variable "az_list" {
-  description = "IBM Cloud availability zones"
-}
-
+# variable "az_list" {
+#   description = "IBM Cloud availability zones"
+# }
 
 variable "generation" {
   description = "VPC generation"
+  default     = 2
 }
 
+# unique vpc name
 variable "unique_id" {
   description = "The vpc unique id"
 }
 
-##############################################################################
+
+variable "frontend_count" {
+  description = "number of front end zones"
+  default     = 1
+}
+
+variable "backend_count" {
+  description = "number of back end zones"
+  default     = 1
+}
 
 ##############################################################################
 # Network variables
 ##############################################################################
 
-variable "az-prefix" {
-}
 
-variable "az1_subnet" {
-}
-
-variable "subnet-cat" {
-}
-
-variable "backend_cidr_blocks" {
-}
 
 variable "frontend_cidr_blocks" {
 }
 
-##############################################################################
-variable "vpc_name" {
-  description = "name of vpc"
+variable "backend_cidr_blocks" {
 }
+##############################################################################
 
 
 
