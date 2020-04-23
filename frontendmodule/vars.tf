@@ -34,6 +34,9 @@ variable "subnet_ids" {
 variable "bastion_remote_sg_id" {
 }
 
+variable "app_backend_sg_id" {
+}
+
 # bastion subnet CIDR requiring access to frontend subnets 
 variable "bastion_subnet_CIDR" {
 }

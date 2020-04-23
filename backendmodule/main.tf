@@ -85,10 +85,11 @@ locals {
 
   sg_rules = [
     ["inbound", var.bastion_remote_sg_id, "tcp", 22, 22],
+    ["inbound", var.app_frontend_sg_id, "tcp", 27017, 27017],
     ["outbound", "161.26.0.0/24", "tcp", 443, 443],
     ["outbound", "161.26.0.0/24", "tcp", 80, 80],
     ["outbound", "161.26.0.0/24", "udp", 53, 53],
-    ["outbound", var.pub_repo_egress_cidr, "tcp", 80, 80],
+    ["outbound", var.pub_repo_egress_cidr, "tcp", 443, 443],
     ["inbound", "0.0.0.0/0", "tcp", 80, 80]
   ]
 

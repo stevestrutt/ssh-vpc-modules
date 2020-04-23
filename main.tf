@@ -69,6 +69,7 @@ module "frontend" {
   bastion_remote_sg_id     = module.bastion.security_group_id
   bastion_subnet_CIDR      = var.bastion_cidr
   pub_repo_egress_cidr     = local.pub_repo_egress_cidr
+  app_backend_sg_id        = module.backend.security_group_id
 }
 
 module "backend" {
@@ -84,5 +85,6 @@ module "backend" {
   subnet_ids               = module.vpc.backend_subnet_ids
   bastion_remote_sg_id     = module.bastion.security_group_id
   bastion_subnet_CIDR      = var.bastion_cidr
+  app_frontend_sg_id       = module.frontend.security_group_id
   pub_repo_egress_cidr     = local.pub_repo_egress_cidr
 }

@@ -76,6 +76,7 @@ variable "profile" {
 # image names can be determined with the cli command `ibmcloud is images`
 variable "image_name" {
   default = "ibm-centos-7-6-minimal-amd64-1"
+  #default = "ibm-ubuntu-18-04-1-minimal-amd64-1"
 }
 
 data "ibm_is_image" "os" {
