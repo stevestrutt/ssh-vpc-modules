@@ -11,7 +11,8 @@ variable "ibm_region" {
 }
 
 variable "ibmcloud_api_key" {
-
+  description = "IBM Cloud API key when run standalone"
+  default     = ""
 }
 
 
@@ -74,7 +75,7 @@ variable "backend_cidr" {
 
 # VSI profile
 variable "profile" {
-  description = "Default profile for VSIs deployed in frontend and backend"
+  description = "Profile for VSIs deployed in frontend and backend"
   default     = "cx2-2x4"
 }
 
@@ -93,7 +94,7 @@ data "ibm_is_ssh_key" "sshkey" {
 }
 
 variable "ssh_key_name" {
-  description = "Name of existing private SSH key uploaded to IBM Cloud for VSI access"
+  description = "Name of existing public SSH key uploaded to IBM Cloud for VSI access"
   default     = "ansible"
 }
 
