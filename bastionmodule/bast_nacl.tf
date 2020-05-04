@@ -93,7 +93,7 @@ locals {
 # }
 
 resource "ibm_is_network_acl" "bastion_acl" {
-  name           = "bastion-acl"
+  name           = "${var.unique_id}-bastion-acl"
   vpc            = var.ibm_is_vpc_id
   resource_group = var.ibm_is_resource_group_id
   dynamic "rules" {
