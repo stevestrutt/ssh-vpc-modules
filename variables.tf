@@ -10,10 +10,10 @@ variable "ibm_region" {
   # default     = "eu-gb"
 }
 
-variable "ibmcloud_api_key" {
-  description = "IBM Cloud API key when run standalone"
-  default     = ""
-}
+# variable "ibmcloud_api_key" {
+#   description = "IBM Cloud API key when run standalone"
+#   default     = ""
+# }
 
 
 
