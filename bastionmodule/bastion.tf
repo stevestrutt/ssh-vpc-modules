@@ -21,9 +21,9 @@ resource "ibm_is_instance" "bastion" {
     security_groups = [ibm_is_security_group.bastion.id]
   }
 
-  vpc            = data.ibm_is_vpc.vpc.id
+  vpc            = var.ibm_is_vpc_id
   zone           = "${var.ibm_region}-${count.index % 3 + 1}"
-  resource_group = data.ibm_is_vpc.vpc.resource_group
+  resource_group = var.ibm_is_resource_group_id
   keys           = [var.ssh_key_id]
   user_data      = file("${path.module}/bastion_config.yml")
 }
@@ -44,7 +44,7 @@ resource "ibm_is_vpc_address_prefix" "bast_subnet_prefix" {
   count = var.bastion_count
   name  = "${var.unique_id}-bast-prefix-zone-${count.index + 1}"
   zone  = "${var.ibm_region}-${count.index % 3 + 1}"
-  vpc   = data.ibm_is_vpc.vpc.id
+  vpc   = var.ibm_is_vpc_id
   cidr  = local.bastion_prefix[count.index]
 }
 
@@ -52,11 +52,11 @@ resource "ibm_is_vpc_address_prefix" "bast_subnet_prefix" {
 resource "ibm_is_subnet" "bastion_subnet" {
   count           = var.bastion_count
   name            = "${var.unique_id}-bast-subnet-${count.index + 1}"
-  vpc             = data.ibm_is_vpc.vpc.id
+  vpc             = var.ibm_is_vpc_id
   zone            = "${var.ibm_region}-${count.index % 3 + 1}"
   ipv4_cidr_block = ibm_is_vpc_address_prefix.bast_subnet_prefix.*.cidr[count.index]
-
-  network_acl = ibm_is_network_acl.bastion_acl.id
+  resource_group  = var.ibm_is_resource_group_id
+  network_acl     = ibm_is_network_acl.bastion_acl.id
 }
 
 

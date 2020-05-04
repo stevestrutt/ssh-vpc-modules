@@ -8,6 +8,14 @@ data "ibm_is_vpc" "vpc" {
   name = var.unique_id
 }
 
+# create resources in this vpc id
+variable "ibm_is_vpc_id" {
+}
+
+# create resources in this resource group id
+variable "ibm_is_resource_group_id" {
+}
+
 ##############################################################################
 # Bastion host VSI variables
 ##############################################################################

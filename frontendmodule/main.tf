@@ -32,9 +32,10 @@ resource "ibm_is_instance" "frontend-server" {
 
 
 resource "ibm_is_lb" "webapptier-lb" {
-  name    = "webapptier"
-  type    = "public"
-  subnets = toset(var.subnet_ids)
+  name           = "webapptier"
+  type           = "public"
+  subnets        = toset(var.subnet_ids)
+  resource_group = var.ibm_is_resource_group_id
 }
 
 
@@ -74,8 +75,9 @@ resource "ibm_is_lb_pool_member" "webapptier-lb-pool-member-zone1" {
 
 # this is the SG applied to the frontend instances
 resource "ibm_is_security_group" "frontend" {
-  name = "${var.unique_id}-frontend-sg"
-  vpc  = var.ibm_is_vpc_id
+  name           = "${var.unique_id}-frontend-sg"
+  vpc            = var.ibm_is_vpc_id
+  resource_group = var.ibm_is_resource_group_id
 }
 
 

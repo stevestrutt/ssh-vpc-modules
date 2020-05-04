@@ -12,8 +12,8 @@
 # this is the SG applied to the bastion instance
 resource "ibm_is_security_group" "bastion" {
   name           = "${var.unique_id}-bastion-sg"
-  vpc            = data.ibm_is_vpc.vpc.id
-  resource_group = data.ibm_is_vpc.vpc.resource_group
+  vpc            = var.ibm_is_vpc_id
+  resource_group = var.ibm_is_resource_group_id
 }
 
 

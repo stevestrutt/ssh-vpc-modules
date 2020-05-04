@@ -35,6 +35,7 @@ resource "ibm_is_instance" "backend-server" {
 #   name    = "backapptier"
 #   type    = "private"
 #   subnets = toset(var.subnet_ids)
+# resource_group = var.ibm_is_resource_group_id
 # }
 
 
@@ -74,8 +75,9 @@ resource "ibm_is_instance" "backend-server" {
 
 # this is the SG applied to the backend instances
 resource "ibm_is_security_group" "backend" {
-  name = "${var.unique_id}-backend-sg"
-  vpc  = var.ibm_is_vpc_id
+  name           = "${var.unique_id}-backend-sg"
+  vpc            = var.ibm_is_vpc_id
+  resource_group = var.ibm_is_resource_group_id
 }
 
 

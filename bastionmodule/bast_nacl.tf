@@ -94,8 +94,8 @@ locals {
 
 resource "ibm_is_network_acl" "bastion_acl" {
   name           = "bastion-acl"
-  vpc            = data.ibm_is_vpc.vpc.id
-  resource_group = data.ibm_is_vpc.vpc.resource_group
+  vpc            = var.ibm_is_vpc_id
+  resource_group = var.ibm_is_resource_group_id
   dynamic "rules" {
     for_each = [for i in local.rulesmerge :
       {
