@@ -2,11 +2,8 @@
 # Bastion host VPC input variables
 ##############################################################################
 
-variable "unique_id" {} # string added to the front for all created resources
-
-data "ibm_is_vpc" "vpc" {
-  name = var.unique_id
-}
+variable "unique_id" {
+} # string added to the front for all created resources
 
 # create resources in this vpc id
 variable "ibm_is_vpc_id" {
