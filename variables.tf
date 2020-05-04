@@ -21,14 +21,15 @@ variable "resource_group_name" {
   default     = "Default"
 }
 
-variable "generation" {
-  description = "VPC generation"
-  default     = 2
-}
+# #Only tested with Gen2. Gen1 requires changes to images, profile names and some VPC resources 
+# variable "generation" {
+#   description = "VPC generation. Only tested with VPC Gen2"
+#   default     = 2
+# }
 
 # unique name for the VPC in the account 
 variable "vpc_name" {
-  description = "name of vpc"
+  description = "Name of vpc"
   default     = "ssh-vpc-vpc"
 }
 
@@ -40,7 +41,7 @@ variable "vpc_name" {
 
 
 variable "bastion_ingress_cidr" {
-  description = "DANGER: cidr range that can ssh to the bastion"
+  description = "CIDR range that can ssh to the bastion"
   default     = ["0.0.0.0/0"]
 }
 
@@ -54,15 +55,18 @@ locals {
 # frontend_cidr_blocks = [cidrsubnet(var.frontend_cidr, 4, 0), cidrsubnet(var.frontend_cidr, 4, 2), cidrsubnet(var.frontend_cidr, 4, 4)]
 # to create individual zone subnets for use with `ibm_is_address_prefix`
 variable "bastion_cidr" {
-  default = "172.22.192.0/20"
+  description = "Complete CIDR range across all three zones for bastion host subnets"
+  default     = "172.22.192.0/20"
 }
 
 variable "frontend_cidr" {
-  default = "172.16.0.0/20"
+  description = "Complete CIDR range across all three zones for frontend subnets"
+  default     = "172.16.0.0/20"
 }
 
 variable "backend_cidr" {
-  default = "172.17.0.0/20"
+  description = "Complete CIDR range across all three zones for backend subnets"
+  default     = "172.17.0.0/20"
 }
 
 
@@ -70,13 +74,14 @@ variable "backend_cidr" {
 
 # VSI profile
 variable "profile" {
-  default = "cx2-2x4"
+  description = "Default profile for VSIs deployed in frontend and backend"
+  default     = "cx2-2x4"
 }
 
 # image names can be determined with the cli command `ibmcloud is images`
 variable "image_name" {
-  default = "ibm-centos-7-6-minimal-amd64-1"
-  #default = "ibm-ubuntu-18-04-1-minimal-amd64-1"
+  description = "OS image for VSI deployments. Only tested with Centos"
+  default     = "ibm-centos-7-6-minimal-amd64-1"
 }
 
 data "ibm_is_image" "os" {
@@ -88,6 +93,7 @@ data "ibm_is_ssh_key" "sshkey" {
 }
 
 variable "ssh_key_name" {
-  default = "ansible"
+  description = "Name of existing private SSH key uploaded to IBM Cloud for VSI access"
+  default     = "ansible"
 }
 

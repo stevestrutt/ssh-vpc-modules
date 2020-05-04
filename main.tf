@@ -13,6 +13,7 @@ data "ibm_resource_group" "all_rg" {
 }
 
 locals {
+  generation     = 2
   frontend_count = 2
   backend_count  = 1
 }
@@ -22,7 +23,7 @@ module "vpc" {
   source               = "./vpc"
   ibm_region           = var.ibm_region
   resource_group_name  = var.resource_group_name
-  generation           = var.generation
+  generation           = local.generation
   unique_id            = var.vpc_name
   frontend_count       = local.frontend_count
   frontend_cidr_blocks = local.frontend_cidr_blocks
