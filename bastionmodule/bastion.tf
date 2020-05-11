@@ -21,6 +21,11 @@ resource "ibm_is_instance" "bastion" {
     security_groups = [ibm_is_security_group.bastion.id]
   }
 
+  timeouts {
+    create = "10m"
+    delete = "10m"
+  }
+
   vpc            = var.ibm_is_vpc_id
   zone           = "${var.ibm_region}-${count.index % 3 + 1}"
   resource_group = var.ibm_is_resource_group_id
