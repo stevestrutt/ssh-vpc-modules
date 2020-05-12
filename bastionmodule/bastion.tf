@@ -47,11 +47,13 @@ locals {
 }
 
 resource "ibm_is_vpc_address_prefix" "bast_subnet_prefix" {
-  count = var.bastion_count
-  name  = "${var.unique_id}-bast-prefix-zone-${count.index + 1}"
-  zone  = "${var.ibm_region}-${count.index % 3 + 1}"
-  vpc   = var.ibm_is_vpc_id
-  cidr  = local.bastion_prefix[count.index]
+  count                     = var.bastion_count
+  name                      = "${var.unique_id}-bast-prefix-zone-${count.index + 1}"
+  zone                      = "${var.ibm_region}-${count.index % 3 + 1}"
+  address_prefix_management = "maual"
+  vpc                       = var.ibm_is_vpc_id
+  cidr                      = local.bastion_prefix[count.index]
+  address_prefix_management = "manual"
 }
 
 # Single subnet for singe zone bastion
