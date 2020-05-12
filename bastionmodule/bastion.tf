@@ -63,6 +63,7 @@ resource "ibm_is_subnet" "bastion_subnet" {
   ipv4_cidr_block = ibm_is_vpc_address_prefix.bast_subnet_prefix.*.cidr[count.index]
   resource_group  = var.ibm_is_resource_group_id
   network_acl     = ibm_is_network_acl.bastion_acl.id
+  depends_on      = [ibm_is_vpc_address_prefix.bast_subnet_prefix]
 }
 
 

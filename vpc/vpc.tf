@@ -67,6 +67,7 @@ resource "ibm_is_subnet" "frontend_subnet" {
   ipv4_cidr_block = var.frontend_cidr_blocks[count.index]
   #network_acl     = "${ibm_is_network_acl.multizone_acl.id}"
   public_gateway = ibm_is_public_gateway.repo_gateway[count.index].id
+  depends_on     = [ibm_is_vpc_address_prefix.frontend_subnet_prefix]
 }
 
 # Increase count to create subnets in all zones
@@ -78,6 +79,7 @@ resource "ibm_is_subnet" "backend_subnet" {
   ipv4_cidr_block = var.backend_cidr_blocks[count.index]
   #network_acl     = "${ibm_is_network_acl.multizone_acl.id}"
   public_gateway = ibm_is_public_gateway.repo_gateway[count.index].id
+  depends_on     = [ibm_is_vpc_address_prefix.backend_subnet_prefix]
 }
 
 
