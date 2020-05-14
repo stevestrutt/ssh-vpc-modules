@@ -37,6 +37,13 @@ resource "ibm_is_lb" "webapptier-lb" {
   type           = "public"
   subnets        = toset(var.subnet_ids)
   resource_group = var.ibm_is_resource_group_id
+
+  timeouts {
+    create = "15m"
+    delete = "15m"
+  }
+
+
 }
 
 

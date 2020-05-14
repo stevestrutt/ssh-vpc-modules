@@ -14,8 +14,9 @@ data "ibm_resource_group" "all_rg" {
 }
 
 resource "ibm_is_vpc" "vpc" {
-  name           = var.unique_id
-  resource_group = data.ibm_resource_group.all_rg.id
+  name                      = var.unique_id
+  resource_group            = data.ibm_resource_group.all_rg.id
+  address_prefix_management = "manual"
 }
 
 ##############################################################################
@@ -32,21 +33,20 @@ resource "ibm_is_vpc" "vpc" {
 
 
 resource "ibm_is_vpc_address_prefix" "frontend_subnet_prefix" {
-  count                     = var.frontend_count
-  name                      = "${var.unique_id}-frontend-prefix-zone-${count.index + 1}"
-  zone                      = "${var.ibm_region}-${count.index % 3 + 1}"
-  vpc                       = ibm_is_vpc.vpc.id
-  cidr                      = var.frontend_cidr_blocks[count.index]
-  address_prefix_management = "manual"
+  count = var.frontend_count
+  name  = "${var.unique_id}-frontend-prefix-zone-${count.index + 1}"
+  zone  = "${var.ibm_region}-${count.index % 3 + 1}"
+  vpc   = ibm_is_vpc.vpc.id
+  cidr  = var.frontend_cidr_blocks[count.index]
+
 }
 
 resource "ibm_is_vpc_address_prefix" "backend_subnet_prefix" {
-  count                     = var.backend_count
-  name                      = "${var.unique_id}-backend-prefix-zone-${count.index + 1}"
-  zone                      = "${var.ibm_region}-${count.index % 3 + 1}"
-  vpc                       = ibm_is_vpc.vpc.id
-  cidr                      = var.backend_cidr_blocks[count.index]
-  address_prefix_management = "manual"
+  count = var.backend_count
+  name  = "${var.unique_id}-backend-prefix-zone-${count.index + 1}"
+  zone  = "${var.ibm_region}-${count.index % 3 + 1}"
+  vpc   = ibm_is_vpc.vpc.id
+  cidr  = var.backend_cidr_blocks[count.index]
 }
 
 ##############################################################################
