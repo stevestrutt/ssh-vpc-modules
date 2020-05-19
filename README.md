@@ -27,15 +27,18 @@ the provider block does not include an API Key. To run standalone with
 Terraform, modify the example to input your IBM Cloud API key as an
 input variable.
 
-When used with Schematics, network Access Control List (ACL) rules and
-security groups are configured to only allow SSH access from the CIDR
-ranges used by the Schematics service. Access from all other public addresses is
-denied. If SSH access is desired from a public CIDR, an input value for
-` ssh_source_cidr_blocks` should be specified at execution time.
 
-If used with standalone Terraform, ` ssh_source_cidr_blocks ` is
+To mitigate the security risks of SSH connections over the public network to the 
+bastion hosts and VSIs when using this example with Schematics, access is only permitted
+from the Schematics service CIDRs. When deployed using Schematics, network 
+Access Control List (ACL) rules and security groups are configured to only 
+allow SSH access from the CIDR ranges used by the Schematics service. Access 
+from all other public addresses is denied. If SSH access is desired from a public CIDR, an input value for
+`ssh_source_cidr_override` should be specified at execution time.
+
+If used with standalone Terraform, `ssh_source_cidr_override` is
 set by default to open access with the CIDR "0.0.0.0/0". To limit access
-to a specific source IP address, configure a restrictive CIDR.
+to a specific source IP address or CIDR, configure a restrictive CIDR.
 
 The following resources are deployed by this template and may incur
 charges.
@@ -149,15 +152,17 @@ bastion_host_ip_address = [
 app_dns_hostname = 2989c099-us-south.lb.appdomain.cloud
 ```
 
-## VPC remote access via SSH
+## Validating the VPC security configuration
 
 The default VPC security configuration is to only allow SSH access from
 IP ranges used by IBM Cloud Schematics. Any access from IP addresses
 outside these ranges will be denied.
 
-To validate Schematics has SSH access, the template can be run with the
-input variable `ssh_validate_access = "true"`. This uses Terraform
-remote-exec to SSH onto the deployed VSIs and return the host name.
+To validate Schematics has successfully provisioned SSH access, the template can be run with the
+input variable `ssh_accesscheck = true`. This uses Terraform
+remote-exec to SSH onto the deployed VSIs and return the host name. If Schematics cannot 
+access the VSIs the Apply will fail with a `timeout` message.  
+
 
 To validate that access is denied from other IP addresses, the following
 SSH command can be used from a local workstation. Copy and paste the
@@ -173,6 +178,5 @@ ssh -i ~/.ssh/<ansible> -o ProxyCommand="ssh -i ~/.ssh/<ansible>
 The command will return:
 
 ```
-ssh: connect to host 52.116.132.27 port 22: Operation timed out
-kex_exchange_identification: Connection closed by remote host
+ssh: connect to host 52.116.132.26 port 22: Operation timed out
 ```
