@@ -38,9 +38,9 @@ locals {
 #   value = local.destrules
 # }
 
-# output "list_source" {
-#   value = local.sourcerules
-# }
+output "list_source" {
+  value = local.sourcerules
+}
 
 
 locals {
@@ -88,9 +88,9 @@ locals {
   ]
 }
 
-# output "list_nacl_rules" {
-#   value = local.rulesmerge
-# }
+output "list_nacl_rules" {
+  value = local.rulesmerge
+}
 
 resource "ibm_is_network_acl" "bastion_acl" {
   name           = "${var.unique_id}-bastion-acl"

@@ -36,9 +36,8 @@ locals {
     eu = ["2.0.0.0/14", "3.0.0.0/14"],
   }
   schematics_ssh_access = lookup(local.schematics_ssh_access_map, local.geo, ["0.0.0.0/0"])
-  bastion_ingress_cidr  = var.ssh_source_cidr_override != [] ? var.ssh_source_cidr_override : local.schematics_ssh_access
+  bastion_ingress_cidr  = var.ssh_source_cidr_override1 != [] ? var.ssh_source_cidr_override1 : local.schematics_ssh_access
 }
-
 
 
 module "vpc" {
