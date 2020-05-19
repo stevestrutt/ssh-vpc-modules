@@ -1,5 +1,5 @@
 locals {
-  target_count = var.ssh_accesscheck ? len(var.target_hosts) : 0
+  target_count = var.ssh_accesscheck ? length(var.target_hosts) : 0
 }
 
 
@@ -13,6 +13,7 @@ resource "null_resource" "ssh_accesscheck" {
     host        = var.target_hosts[count.index]
     user        = "root"
     private_key = var.ssh_private_key
+    timeout     = "60s"
   }
 
   triggers = {
