@@ -92,75 +92,75 @@ output "list_nacl_rules" {
   value = local.rulesmerge
 }
 
-resource "ibm_is_network_acl" "bastion_acl" {
-  name           = "${var.unique_id}-bastion-acl"
-  vpc            = var.ibm_is_vpc_id
-  resource_group = var.ibm_is_resource_group_id
-  dynamic "rules" {
-    for_each = [for i in local.rulesmerge :
-      {
-        name            = i.name
-        action          = i.action
-        source          = i.source
-        destination     = i.destination
-        direction       = i.direction
-        source_port_min = i.source_port_min
-        source_port_max = i.source_port_max
-        port_min        = i.port_min
-        port_max        = i.port_max
-        type            = i.type
-      }
-    ]
-    content {
-      name        = rules.value.name
-      action      = rules.value.action
-      source      = rules.value.source
-      destination = rules.value.destination
-      direction   = rules.value.direction
-      dynamic "tcp" {
-        for_each = rules.value.type == "tcp" ? [
-          {
-            port_max        = rules.value.port_max
-            port_min        = rules.value.port_min
-            source_port_max = rules.value.source_port_max
-            source_port_min = rules.value.source_port_min
-          }
-        ] : []
-        content {
-          port_max        = tcp.value.port_max
-          port_min        = tcp.value.port_min
-          source_port_max = tcp.value.source_port_max
-          source_port_min = tcp.value.source_port_min
-        }
-      }
-      dynamic "udp" {
-        for_each = rules.value.type == "udp" ? [
-          {
-            port_max        = rules.value.port_max
-            port_min        = rules.value.port_min
-            source_port_max = rules.value.source_port_max
-            source_port_min = rules.value.source_port_min
-          }
-        ] : []
-        content {
-          port_max        = udp.value.port_max
-          port_min        = udp.value.port_min
-          source_port_max = udp.value.source_port_max
-          source_port_min = udp.value.source_port_min
-        }
-      }
-      dynamic "icmp" {
-        for_each = rules.value.type == "icmp" ? [
-          {
-            code = rules.value.port_max
-            type = rules.value.port_min
-          }
-        ] : []
-        content {
-          code = icmp.value.code
-          type = icmp.value.type
-        }
-      }
-    }
-  }
-}
+# resource "ibm_is_network_acl" "bastion_acl" {
+#   name           = "${var.unique_id}-bastion-acl"
+#   vpc            = var.ibm_is_vpc_id
+#   resource_group = var.ibm_is_resource_group_id
+#   dynamic "rules" {
+#     for_each = [for i in local.rulesmerge :
+#       {
+#         name            = i.name
+#         action          = i.action
+#         source          = i.source
+#         destination     = i.destination
+#         direction       = i.direction
+#         source_port_min = i.source_port_min
+#         source_port_max = i.source_port_max
+#         port_min        = i.port_min
+#         port_max        = i.port_max
+#         type            = i.type
+#       }
+#     ]
+#     content {
+#       name        = rules.value.name
+#       action      = rules.value.action
+#       source      = rules.value.source
+#       destination = rules.value.destination
+#       direction   = rules.value.direction
+#       dynamic "tcp" {
+#         for_each = rules.value.type == "tcp" ? [
+#           {
+#             port_max        = rules.value.port_max
+#             port_min        = rules.value.port_min
+#             source_port_max = rules.value.source_port_max
+#             source_port_min = rules.value.source_port_min
+#           }
+#         ] : []
+#         content {
+#           port_max        = tcp.value.port_max
+#           port_min        = tcp.value.port_min
+#           source_port_max = tcp.value.source_port_max
+#           source_port_min = tcp.value.source_port_min
+#         }
+#       }
+#       dynamic "udp" {
+#         for_each = rules.value.type == "udp" ? [
+#           {
+#             port_max        = rules.value.port_max
+#             port_min        = rules.value.port_min
+#             source_port_max = rules.value.source_port_max
+#             source_port_min = rules.value.source_port_min
+#           }
+#         ] : []
+#         content {
+#           port_max        = udp.value.port_max
+#           port_min        = udp.value.port_min
+#           source_port_max = udp.value.source_port_max
+#           source_port_min = udp.value.source_port_min
+#         }
+#       }
+#       dynamic "icmp" {
+#         for_each = rules.value.type == "icmp" ? [
+#           {
+#             code = rules.value.port_max
+#             type = rules.value.port_min
+#           }
+#         ] : []
+#         content {
+#           code = icmp.value.code
+#           type = icmp.value.type
+#         }
+#       }
+#     }
+#   }
+# }
