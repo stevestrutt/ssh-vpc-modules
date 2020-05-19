@@ -45,7 +45,7 @@ variable "vpc_name" {
 variable "ssh_source_cidr_override" {
   type        = list
   description = "Override CIDR range that is allowed to ssh to the bastion"
-  default     = []
+  default     = ["0.0.0.0/0"]
 }
 
 
