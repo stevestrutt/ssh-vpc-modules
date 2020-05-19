@@ -1,4 +1,4 @@
-variable "accesscheck" {
+variable "ssh_accesscheck" {
   description = "Flag to request remote-exec validation of SSH access, true/false"
   default     = false
 }

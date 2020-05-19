@@ -1,5 +1,5 @@
-resource "null_resource" "accesscheck" {
-  #count = var.accesscheck ? 1 : 0
+resource "null_resource" "ssh_accesscheck" {
+  count = var.ssh_accesscheck ? 1 : 0
 
   connection {
     bastion_host = var.bastion_host

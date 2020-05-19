@@ -93,7 +93,7 @@ module "backend" {
 
 module "accesscheck" {
   source          = "./accesscheck"
-  accesscheck     = var.ssh_accesscheck
+  ssh_accesscheck = var.ssh_accesscheck
   ssh_private_key = data.ibm_is_ssh_key.sshkey.id
   bastion_host    = module.bastion.bastion_ip_addresses[0]
   target_hosts    = concat(module.frontend.primary_ipv4_address, module.backend.primary_ipv4_address)
