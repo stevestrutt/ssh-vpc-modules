@@ -19,11 +19,5 @@ output "app_dns_hostname" {
   value = module.frontend.lb_hostname
 }
 
-output "list_source" {
-  value = module.bastion.list_source
-}
 
-output "bastion_rules" {
-  value = module.bastion.list_nacl_rules
-}
 
