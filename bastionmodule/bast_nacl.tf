@@ -61,8 +61,8 @@ locals {
 
   #concatinate all sources of rules
   # max rules is 25, focus is on denying external traffic access to subnets in case of SG misconfiguration
-  rules = concat(var.extrarules, local.destrules, local.baserules)
-  # , local.sourcerules
+  rules = concat(var.extrarules, local.destrules, local.sourcerules, local.baserules)
+
   mappedrules = [
     for entry in local.rules :
     merge(zipmap(local.keys, entry))
