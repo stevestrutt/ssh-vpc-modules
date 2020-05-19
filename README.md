@@ -71,7 +71,7 @@ charges.
 |  vsi_profile | Profile for VSIs deployed in frontend and backend  | string  | | "cx2-2x4"
 |  image_name |  OS image for VSI deployments. Only tested with Centos | string | | "ibm-centos-7-6-minimal-amd64-1" |
 |  ssh_key_name | Name given to public SSH key uploaded to IBM Cloud for VSI access |  string |  ✓   |       
-|  ssh_validate_access | Set to "true' if access to VSIs via SSH is to be validated |  string | | "false"
+|  ssh_accesscheck | Set to "true' if access to VSIs via SSH is to be validated |  string | | "false"
 |  ssh_private_key | Optional private key from key pair. Only required if it desired to validate remote SSH access to the bastion host and VSIs. | string  |                  
 
 ## Outputs
@@ -129,6 +129,13 @@ remote-exec or Redhat Ansible.
 ```
 Outputs:
 
+frontend_server_host_ip_addresses = [
+  [
+    "172.16.0.5",
+    "172.16.2.5",
+  ],
+]
+
 backend_server_host_ip_addresses = [
   [
     "172.17.0.4",
@@ -139,12 +146,7 @@ bastion_host_ip_address = [
   "52.116.132.26",
 ]
 
-frontend_server_host_ip_addresses = [
-  [
-    "172.16.0.5",
-    "172.16.2.5",
-  ],
-]
+app_dns_hostname = 2989c099-us-south.lb.appdomain.cloud
 ```
 
 ## VPC remote access via SSH

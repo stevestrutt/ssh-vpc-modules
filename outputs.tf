@@ -18,3 +18,7 @@ output "backend_server_host_ip_addresses" {
 output "app_dns_hostname" {
   value = module.frontend.lb_hostname
 }
+
+output "remote-exec-results" {
+  value = module.accesscheck.remote-exec-results
+}
