@@ -88,12 +88,25 @@ data "ibm_is_image" "os" {
   name = var.image_name
 }
 
+
+##############################################################################
+# Access check variables
+##############################################################################
+
+variable "accesscheck" {
+  description = "Flag to request remote-exec validation of SSH access, true/false"
+  default     = false
+}
+
+variable "ssh_private_key" {
+  description = "SSH private key of SSH key pair used for VSIs and Bastion"
+}
+
 data "ibm_is_ssh_key" "sshkey" {
   name = var.ssh_key_name
 }
 
 variable "ssh_key_name" {
-  description = "Name of existing public SSH key uploaded to IBM Cloud for VSI access"
-  default     = "ansible"
+  description = "Name giving to public SSH key uploaded to IBM Cloud for VSI access"
 }
 

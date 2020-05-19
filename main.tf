@@ -90,3 +90,10 @@ module "backend" {
   app_frontend_sg_id       = module.frontend.security_group_id
   pub_repo_egress_cidr     = local.pub_repo_egress_cidr
 }
+
+module "accesscheck" {
+  source          = "./accesscheck"
+  ssh_private_key = data.ibm_is_ssh_key.sshkey.id
+  bastion_host    = module.bastion.bastion_ip_addresses[0]
+  target_hosts    = concat(module.frontend.primary_ipv4_address, module.backend.primary_ipv4_address)
+}

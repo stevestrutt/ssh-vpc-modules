@@ -14,3 +14,7 @@ output "frontend_server_host_ip_addresses" {
 output "backend_server_host_ip_addresses" {
   value = [module.backend.primary_ipv4_address]
 }
+
+output "app_dns_hostname" {
+  value = module.frontend.lb_hostname
+}

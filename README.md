@@ -84,8 +84,8 @@ charges.
 
 ## Instructions
 
-1.  Make sure that you have the [[required IBM Cloud IAM
-    permissions]{.underline}](https://cloud.ibm.com/docs/vpc?topic=vpc-managing-user-permissions-for-vpc-resources) to
+1.  Make sure that you have the [required IBM Cloud IAM
+    permissions](https://cloud.ibm.com/docs/vpc?topic=vpc-managing-user-permissions-for-vpc-resources) to
     create and work with VPC infrastructure and you are [assigned the
     correct
     permissions](https://cloud.ibm.com/docs/schematics?topic=schematics-access) to
@@ -172,6 +172,5 @@ The command will return:
 
 ```
 ssh: connect to host 52.116.132.27 port 22: Operation timed out
-
 kex_exchange_identification: Connection closed by remote host
 ```

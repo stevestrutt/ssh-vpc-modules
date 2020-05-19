@@ -39,18 +39,12 @@ variable "backend_count" {
 # Network variables
 ##############################################################################
 
-
-
 variable "frontend_cidr_blocks" {
 }
 
 variable "backend_cidr_blocks" {
 }
 ##############################################################################
-
-
-
-
 
 
 
