@@ -40,6 +40,23 @@ locals {
 }
 
 
+output "CIDR" {
+  value = local.bastion_ingress_cidr
+}
+
+output "schematics_ssh_access" {
+  value = local.schematics_ssh_access
+}
+
+
+output "geo" {
+  value = local.geo
+}
+
+output "region" {
+  value = local.region
+}
+
 module "vpc" {
   source               = "./vpc"
   ibm_region           = var.ibm_region
