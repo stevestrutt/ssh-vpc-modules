@@ -29,7 +29,7 @@ input variable.
 
 When used with Schematics, network Access Control List (ACL) rules and
 security groups are configured to only allow SSH access from the CIDR
-ranges used by Schematics. Access from all other public addresses is
+ranges used by the Schematics service. Access from all other public addresses is
 denied. If SSH access is desired from a public CIDR, an input value for
 ` ssh_source_cidr_blocks` should be specified at execution time.
 
@@ -64,7 +64,7 @@ charges.
 | ibm_region | Region of deployed VPC | string | |"us-south" |
 |  vpc_name  | Unique VPC name     | string | | "ssh-bastion-host"
 |  resource_group_name | Name of IBM Cloud Resource Group used for all VPC resources | string | | "Default" |
-|  ssh_source_cidr_blocks |  List of pubic IP CIDR ranges requiring SSH access. When used with Schematics the default is to allow access only from Schematics | list(string) | | {{Schematics}}
+|  ssh_source_cidr_override |  User specified list of CIDR ranges requiring SSH access. When used with Schematics the default is to allow access only from Schematics, otherwise set to "0.0.0.0/0" | list(string) | | {{Schematics}}
 |  bastion_cidr | CIDR range for bastion subnets  |  string  | | "172.22.192.0/20"
 |  frontend_cidr |  List of CIDRs the bastion is to route SSH traffic to |  list(string) | | "172.16.0.0/20"
 |  backend_cidr" |  List of CIDRs the bastion is to route SSH traffic to   | list(string) | | "172.17.0.0/20"

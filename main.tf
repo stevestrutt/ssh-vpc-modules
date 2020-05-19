@@ -18,6 +18,29 @@ locals {
 }
 
 
+##################################################################################################
+#  Select CIDRs allowed to access bastion host  
+#  When running under Schematics allowed ingress CIDRs are set to only allow access from Schematics  
+#  for use with Remote-exec and Redhat Ansible
+#  When running under Terraform local execution ingress is set to 0.0.0.0/0
+#  Access CIDRs are overridden if user_bastion_ingress_cidr is set to anything other than "0.0.0.0/0" 
+##################################################################################################
+
+
+data "external" "env" { program = ["jq", "-n", "env"] }
+locals {
+  region = lookup(data.external.env.result, "TF_VAR_SCHEMATICSLOCATION", "")
+  geo    = substr(local.region, 0, 2)
+  schematics_ssh_access_map = {
+    us = ["169.45.0.0/14", "169.60.0.0/14"],
+    eu = ["2.0.0.0/14", "3.0.0.0/14"],
+  }
+  schematics_ssh_access = lookup(local.schematics_ssh_access_map, local.geo, ["0.0.0.0/0"])
+  bastion_ingress_cidr  = var.ssh_source_cidr_override != [] ? var.ssh_source_cidr_override : local.schematics_ssh_access
+}
+
+
+
 module "vpc" {
   source               = "./vpc"
   ibm_region           = var.ibm_region
@@ -46,7 +69,7 @@ module "bastion" {
   ibm_is_vpc_id            = module.vpc.vpc_id
   ibm_is_resource_group_id = data.ibm_resource_group.all_rg.id
   bastion_cidr             = var.bastion_cidr
-  ssh_source_cidr_blocks   = var.bastion_ingress_cidr
+  ssh_source_cidr_blocks   = local.bastion_ingress_cidr
   destination_cidr_blocks  = [var.frontend_cidr, var.backend_cidr]
   destination_sgs          = [module.frontend.security_group_id, module.backend.security_group_id]
   # destination_sg          = [module.frontend.security_group_id, module.backend.security_group_id]
