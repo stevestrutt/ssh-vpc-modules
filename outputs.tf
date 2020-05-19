@@ -20,7 +20,7 @@ output "app_dns_hostname" {
 }
 
 output "list_source" {
-  value = module.bastion.sourcerules
+  value = module.bastion.list_source
 }
 
 output "bastion_rules" {
