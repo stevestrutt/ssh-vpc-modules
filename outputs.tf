@@ -19,6 +19,7 @@ output "app_dns_hostname" {
   value = module.frontend.lb_hostname
 }
 
-output "remote-exec-results" {
-  value = module.accesscheck.remote-exec-results
+output "bastion_rules" {
+  value = module.bastion.list_nacl_rules
 }
+
