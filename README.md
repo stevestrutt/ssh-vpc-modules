@@ -65,7 +65,7 @@ charges.
 | name | description | type | required | default | sensitive |
 | ---------- | -------- | -------------- | ---------- | ----------- | ----------- |
 | ibm_region | Region of deployed VPC | string | |"us-south" |   | 
-|  vpc_name  | Unique VPC name     | string | | "ssh-bastion-host"   | 
+|  vpc_name  | Unique VPC name     | string | | "ssh-bastion-host"   |   | 
 |  resource_group_name | Name of IBM Cloud Resource Group used for all VPC resources | string | | "Default" |  | 
 |  ssh_source_cidr_override |  User specified list of CIDR ranges requiring SSH access. When used with Schematics the default is to allow access only from Schematics, otherwise set to "0.0.0.0/0" | list(string) | | {{Schematics}}  |   | 
 |  bastion_cidr | CIDR range for bastion subnets  |  string  | | "172.22.192.0/20"  |   | 
@@ -73,7 +73,7 @@ charges.
 |  backend_cidr" |  List of CIDRs the bastion is to route SSH traffic to   | list(string) | | "172.17.0.0/20"  |   | 
 |  vsi_profile | Profile for VSIs deployed in frontend and backend  | string  | | "cx2-2x4" |  | 
 |  image_name |  OS image for VSI deployments. Only tested with Centos | string | | "ibm-centos-7-6-minimal-amd64-1" |  | 
-|  ssh_key_name | Name given to public SSH key uploaded to IBM Cloud for VSI access |  string |  ✓   |    |      
+|  ssh_key_name | Name given to public SSH key uploaded to IBM Cloud for VSI access |  string |  ✓   |    |    |     
 |  ssh_accesscheck | Set to "true' if access to VSIs via SSH is to be validated |  string | | "false" |  | 
 |  ssh_private_key | Optional private key from key pair. Only required if it desired to validate remote SSH access to the bastion host and VSIs. | string  | | |  ✓   |               
 
