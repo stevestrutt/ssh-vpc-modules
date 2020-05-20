@@ -1,5 +1,4 @@
-# Example for VPC access with a Bastion Host from Schematics
-
+# Example VPC with SSH access and Bastion Host for Redhat Ansible
 
 This Terraform example for IBM Cloud Schematics illustrates how to
 deploy an IBM Cloud Gen2 VPC with a bastion host to provide secure
@@ -14,7 +13,6 @@ that may need be implemented before it can be used.
 
 ## Multi-tier VPC with bastion host SSH access
 
-
 The figure here illustrates the configuration of the VPC deployed by
 this example. For a detailed explanation of bastion host, ACL and
 security group configuration, please see the IBM Developer article
@@ -22,23 +20,70 @@ security group configuration, please see the IBM Developer article
 
 ![Multi-tier VPC with bastion host](images/multitiervpc.png)
 
+The example deploys a three tier application environment, with a public facing
+load balancer, a frontend app tier for application webservers and a backend tier For
+a database server. The two frontend servers are deployed across multiple MZR zones to
+demonstrate scaling and HA resilience. The backend tier can be optionally provisioned with
+multiple VSIs across zones.
+
+Public gateways and DNS access is configured to support deployment of opensource application
+packages using Redhat Ansible.  
+
+
+
 This example was written for use with IBM Cloud Schematics, therefore
 the provider block does not include an API Key. To run standalone with
 Terraform, modify the example to input your IBM Cloud API key as an
 input variable.
 
+### SSH access restrictions
+A layered approach to SSH access is applied in this example. SSH access to app VSI's is restricted
+to connection from the Schematics service only. When used with Schematics only SSH operations performed
+by Terraform remote-exec or Redhat Ansible are enabled to access the app VSIs. All other SSH access from
+the public or private networks to the app VSIs is denied.
 
-To mitigate the security risks of SSH connections over the public network to the 
-bastion hosts and VSIs when using this example with Schematics, access is only permitted
-from the Schematics service CIDRs. When deployed using Schematics, network 
-Access Control List (ACL) rules and security groups are configured to only 
-allow SSH access from the CIDR ranges used by the Schematics service. Access 
-from all other public addresses is denied. If SSH access is desired from a public CIDR, an input value for
+VPC Security Group and network ACL rules are applied to:
+- Allow only inbound SSH access to the bastion host from Schematics
+- Allow only inbound SSH access to the app VSIs from the bastion host
+- Allow only inbound HTTP access on port 8080 from the public load-balancer to the frontend VSIs
+- Allow only inbound Mongodb access on port 27017 from the frontend VSIs to the backend VSIs
+- Outbound access is enabled for both frontend and backend VSIs for DNS and software installation
+- All other inbound and outbound traffic to the bastion host and app VSIs is denied by both ACLs and Security groups
+
+To mitigate the security risks of SSH connections over the public network to the
+bastion hosts and VSIs, the network
+Access Control List (ACL) rules and security groups are configured to only
+allow SSH access from the CIDR ranges used by the Schematics service. Access
+from all other public addresses is denied. If SSH access is desired from a public CIDR other than the Schematics service, an input value for
 `ssh_source_cidr_override` should be specified at execution time.
 
 If used with standalone Terraform, `ssh_source_cidr_override` is
 set by default to open access with the CIDR "0.0.0.0/0". To limit access
 to a specific source IP address or CIDR, configure a restrictive CIDR.
+
+### Bastion host SSH configuration
+The example and Terraform modules are supplied 'as is' and only seek to implement a 'reasonable' set of best practices for bastion host configuration.
+
+The following configuration is applied to the bastion host. The default SSH config is further locked down, along with
+optimisation to support software provisioning with Ansible.  
+
+```
+  - yum --security update
+  - sed -i "s/#MaxSessions 10/MaxSessions 50/" /etc/ssh/sshd_config
+  - sed -i "s/X11Forwarding yes/X11Forwarding no/" /etc/ssh/sshd_config
+  - sed -i "s/PermitRootLogin yes/PermitRootLogin prohibit-password/" /etc/ssh/sshd_config
+  - sed -i "s/#AllowAgentForwarding yes/AllowAgentForwarding no/" /etc/ssh/sshd_config
+  - echo "MaxStartups 50:30:80"  >> /etc/ssh/sshd_config
+  - echo "AllowStreamLocalForwarding no"  >> /etc/ssh/sshd_config
+  - echo 'PasswordAuthentication no' >> /etc/ssh/sshd_config
+  - echo 'UsePAM yes' >> /etc/ssh/sshd_config
+  - echo 'AuthenticationMethods publickey' >> /etc/ssh/sshd_config
+  - service sshd restart
+```
+
+
+
+## Deployed resources
 
 The following resources are deployed by this template and may incur
 charges.
@@ -50,6 +95,20 @@ charges.
 - 1 x VPC
 - Access Control Lists
 - Security Groups
+
+## Usage with Redhat Ansible
+
+Support for software installation and configuration with Redhat Ansible is enabled by the addition
+of VSI tags. The Ansible group assignment of VSIs is determined by the setting of IBM Cloud resource
+tags on the `ibm_is_instance` resource statements. Tags are prefixed with "ans_group:" followed by the group name.   '
+`tags = ["ans_group:backend"]`. A VSI can be assigned to multiple groups, by the addition of multiple `ans_group:`
+prefixed tags.
+
+In this example VSI's are grouped by the Terraform module (frontend, backend) used for deployment. This ensures the match between the VPC network configuration of a VSI and the Ansible role deployed on the VSI.
+
+Correct specification of tags is essential for operation of the Ansible dynamic inventory
+script used by Ansible to retrieve host information from the Terraform State file. The tags here should match the roles
+defined in the site.yml playbook file.
 
 ## Requirements
 
@@ -64,17 +123,17 @@ charges.
 
 | name | description | type | required | default | sensitive |
 | ---------- | -------- | -------------- | ---------- | ----------- | ----------- |
-| ibm_region | Region of deployed VPC | string | |"us-south" |   | 
-|  vpc_name  | Unique VPC name     | string | | "ssh-bastion-host"   |   | 
-|  resource_group_name | Name of IBM Cloud Resource Group used for all VPC resources | string | | "Default" |  | 
-|  ssh_source_cidr_override |  User specified list of CIDR ranges requiring SSH access. When used with Schematics the default is to allow access only from Schematics, otherwise set to "0.0.0.0/0" | list(string) | | {{Schematics}}  |   | 
-|  bastion_cidr | CIDR range for bastion subnets  |  string  | | "172.22.192.0/20"  |   | 
-|  frontend_cidr |  List of CIDRs the bastion is to route SSH traffic to |  list(string) | | "172.16.0.0/20"  |   | 
-|  backend_cidr" |  List of CIDRs the bastion is to route SSH traffic to   | list(string) | | "172.17.0.0/20"  |   | 
-|  vsi_profile | Profile for VSIs deployed in frontend and backend  | string  | | "cx2-2x4" |  | 
-|  image_name |  OS image for VSI deployments. Only tested with Centos | string | | "ibm-centos-7-6-minimal-amd64-1" |  | 
+| ibm_region | Region of deployed VPC | string | |"us-south" |   |
+|  vpc_name  | Unique VPC name     | string | | "ssh-bastion-host"   |   |
+|  resource_group_name | Name of IBM Cloud Resource Group used for all VPC resources | string | | "Default" |  |
+|  ssh_source_cidr_override |  User specified list of CIDR ranges requiring SSH access. When used with Schematics the default is to allow access only from Schematics, otherwise set to "0.0.0.0/0" | list(string) | | {{Schematics}}  |   |
+|  bastion_cidr | CIDR range for bastion subnets  |  string  | | "172.22.192.0/20"  |   |
+|  frontend_cidr |  List of CIDRs the bastion is to route SSH traffic to |  list(string) | | "172.16.0.0/20"  |   |
+|  backend_cidr" |  List of CIDRs the bastion is to route SSH traffic to   | list(string) | | "172.17.0.0/20"  |   |
+|  vsi_profile | Profile for VSIs deployed in frontend and backend  | string  | | "cx2-2x4" |  |
+|  image_name |  OS image for VSI deployments. Only tested with Centos | string | | "ibm-centos-7-6-minimal-amd64-1" |  |
 |  ssh_key_name | Name given to public SSH key uploaded to IBM Cloud for VSI access |  string |  ✓   |    |    |     
-|  ssh_accesscheck | Set to "true' if access to VSIs via SSH is to be validated |  string | | "false" |  | 
+|  ssh_accesscheck | Set to "true' if access to VSIs via SSH is to be validated |  string | | "false" |  |
 |  ssh_private_key | Optional private key from key pair. Only required if it desired to validate remote SSH access to the bastion host and VSIs. | string  | | |  ✓   |               
 
 ## Outputs
@@ -160,7 +219,7 @@ outside these ranges will be denied.
 
 To validate Schematics has successfully provisioned SSH access, the template can be run with the
 input variable `ssh_accesscheck = true`. This uses Terraform
-remote-exec to SSH onto the deployed VSIs and return the host name. If Schematics cannot 
+remote-exec to SSH onto the deployed VSIs and return the host name. If Schematics cannot
 access the VSIs the Apply will fail with a `timeout` message.  
 
 

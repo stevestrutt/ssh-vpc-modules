@@ -1,9 +1,16 @@
-##############################################################################
+######################################################################################
 # Sample module to deploy a 'backend' webserver VSI and security group  
-# No NACL is defined. Security Group configuration by itself is considered sufficient
-# to protect access to the webserver as no floating (public) IPs are defined
-# Subnet is created in VPC module
-##############################################################################
+# No NACL is defined. As no floating (public) IPs are defined, the Security Group 
+# configuration by itself is considered sufficient to protect access to the VSIs. 
+# Subnet is created in VPC module.
+#
+# Redhat Ansible usage is enabled by the addition of VSI tags. All Ansible related VSI 
+# tags are prefixed with "ans_group:" followed by the group name.   '
+# tags = ["ans_group:backend"]'  
+# Correct specification of tags is essential for operation of the Ansible dynamic inventory
+# script used to pass host information to Ansible. The tags here should match the roles
+# defined in the site.yml playbook file. 
+#######################################################################################
 
 
 resource "ibm_is_instance" "backend-server" {
